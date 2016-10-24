@@ -58,5 +58,17 @@ namespace CryptographyProject.Properties {
                 this["OutputFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ThreadsNumber {
+            get {
+                return ((int)(this["ThreadsNumber"]));
+            }
+            set {
+                this["ThreadsNumber"] = value;
+            }
+        }
     }
 }

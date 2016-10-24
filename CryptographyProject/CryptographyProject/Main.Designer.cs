@@ -43,9 +43,12 @@
             this.listAlgorithms = new System.Windows.Forms.CheckedListBox();
             this.btnMain = new System.Windows.Forms.Button();
             this.dialogFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.threadsNumber = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -147,8 +150,10 @@
             // 
             this.logView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logView.FormattingEnabled = true;
+            this.logView.HorizontalScrollbar = true;
             this.logView.Location = new System.Drawing.Point(3, 16);
             this.logView.Name = "logView";
+            this.logView.ScrollAlwaysVisible = true;
             this.logView.Size = new System.Drawing.Size(313, 280);
             this.logView.TabIndex = 0;
             // 
@@ -164,6 +169,7 @@
             // 
             // listAlgorithms
             // 
+            this.listAlgorithms.CheckOnClick = true;
             this.listAlgorithms.FormattingEnabled = true;
             this.listAlgorithms.Items.AddRange(new object[] {
             "Algorithm 1",
@@ -174,7 +180,7 @@
             this.listAlgorithms.Name = "listAlgorithms";
             this.listAlgorithms.Size = new System.Drawing.Size(501, 94);
             this.listAlgorithms.TabIndex = 1;
-            this.listAlgorithms.SelectedIndexChanged += new System.EventHandler(this.listAlgorithms_SelectedIndexChanged);
+            this.listAlgorithms.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listAlgorithms_ItemCheck);
             // 
             // btnMain
             // 
@@ -182,17 +188,46 @@
             this.btnMain.ForeColor = System.Drawing.Color.Green;
             this.btnMain.Location = new System.Drawing.Point(12, 264);
             this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(513, 44);
+            this.btnMain.Size = new System.Drawing.Size(391, 44);
             this.btnMain.TabIndex = 0;
             this.btnMain.Text = "S T A R T";
             this.btnMain.UseVisualStyleBackColor = true;
             this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
+            // 
+            // threadsNumber
+            // 
+            this.threadsNumber.Location = new System.Drawing.Point(409, 285);
+            this.threadsNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.threadsNumber.Name = "threadsNumber";
+            this.threadsNumber.Size = new System.Drawing.Size(109, 20);
+            this.threadsNumber.TabIndex = 3;
+            this.threadsNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.threadsNumber.ValueChanged += new System.EventHandler(this.threadsNumber_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(406, 264);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(92, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Threads numbers:";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 323);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.threadsNumber);
             this.Controls.Add(this.btnMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -208,7 +243,9 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -228,5 +265,7 @@
         private System.Windows.Forms.CheckedListBox listAlgorithms;
         private System.Windows.Forms.FolderBrowserDialog dialogFolder;
         private System.Windows.Forms.CheckBox chSaveLocation;
+        private System.Windows.Forms.NumericUpDown threadsNumber;
+        private System.Windows.Forms.Label label3;
     }
 }

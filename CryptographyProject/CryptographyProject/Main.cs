@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptographyProject.Logic;
 
@@ -15,25 +7,18 @@ namespace CryptographyProject
 {
     public partial class Main : Form
     {
-        //Resource data  
-        private ResourceManager mResourceManager;
-
         //My data
-        private Folders mFolders;
+        
         private MainController mMainController;
-
 
         //Constructor
         public Main()
         {
             InitializeComponent();
 
-            //Initialize the resource data            
-            mResourceManager = new ResourceManager(typeof(CryptographyProject.Properties.Resources));
-
             //Initialize my data
-            mFolders = new Folders();
             mMainController = new MainController();
+            mMainController.Folders = new Folders();
 
             //Load the settings
             try
@@ -53,8 +38,8 @@ namespace CryptographyProject
             {
                 if (dialogFolder.ShowDialog() == DialogResult.OK)
                 {
-                    mFolders.InputFolder = dialogFolder.SelectedPath;
-                    txtInputFolder.Text = mFolders.InputFolder;
+                    mMainController.Folders.InputFolder = dialogFolder.SelectedPath;
+                    txtInputFolder.Text = mMainController.Folders.InputFolder;
                 }
             }
             catch (Exception ex)
@@ -70,8 +55,8 @@ namespace CryptographyProject
             {
                 if (dialogFolder.ShowDialog() == DialogResult.OK)
                 {
-                    mFolders.OutputFolder = dialogFolder.SelectedPath;
-                    txtOutputFolder.Text = mFolders.OutputFolder;
+                    mMainController.Folders.OutputFolder = dialogFolder.SelectedPath;
+                    txtOutputFolder.Text = mMainController.Folders.OutputFolder;
                 }
             }
             catch (Exception ex)
@@ -81,15 +66,77 @@ namespace CryptographyProject
         }
 
         //Choose encryption algorithm
-        private void listAlgorithms_SelectedIndexChanged(object sender, EventArgs e)
+        private void listAlgorithms_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            if (e.NewValue != CheckState.Checked)
+            {
+                return;
+            }
 
+            var selectedItems = listAlgorithms.CheckedIndices;
+            if (selectedItems.Count > 0)
+            {
+                listAlgorithms.SetItemChecked(selectedItems[0], false);
+            }
+            mMainController.AlgorithmIndex = listAlgorithms.SelectedIndex;
+        }
+
+        //This function will enable controls if status = true, else it will disable all the controls
+        private void EnableControls(Control con,bool status = false)
+        {
+            foreach (Control c in con.Controls)
+            {
+                EnableControls(c,status);
+            }
+            con.Enabled = status;
+        }
+
+        //StartingTheProcess of coding/decoding
+        //View changes
+        private void Started()
+        {
+            //Model
+            mMainController.CoderStarted = true;
+            //Design            
+            btnMain.Text = "S T O P";
+            btnMain.ForeColor = Color.FromArgb(0x00FF0000);
+            //Enable all controls = false
+            EnableControls(this);
+            //Only enable the important one
+            btnMain.Enabled = true;
+            btnMain.Parent.Enabled = true;
+            logView.Enabled = true;
+            logView.Parent.Enabled = true;
+        }
+
+        //Ending the process of coding/decoding
+        //View changes
+        private void Ended()
+        {
+            //Model
+            mMainController.CoderStarted = false;
+            //Design
+            btnMain.Text = "S T A R T";
+            btnMain.ForeColor = Color.FromArgb(0x0000FF00);
+            //Enable all controls
+            EnableControls(this, true);
         }
 
         //Main button - start/stop the program
         private void btnMain_Click(object sender, EventArgs e)
         {
-
+            if (mMainController.CoderStarted)
+            {
+                //Stop the coder
+                this.Ended();
+                mMainController.StopTheProcess();
+            }
+            else
+            {
+                //Start the coder
+                this.Started();
+                mMainController.StartTheProcess();
+            }
         }
 
         //Save the new settings data
@@ -101,10 +148,10 @@ namespace CryptographyProject
 
             //Save the data
             Properties.Settings.Default["InputFolder"] = (chSaveLocation.Checked)
-                ? mFolders.InputFolder
+                ? mMainController.Folders.InputFolder
                 : string.Empty;
             Properties.Settings.Default["OutputFolder"] = (chSaveLocation.Checked)
-                ? mFolders.OutputFolder
+                ? mMainController.Folders.OutputFolder
                 : string.Empty;
 
             Properties.Settings.Default.Save();
@@ -132,6 +179,11 @@ namespace CryptographyProject
         //Load the settings and set the input and output folder fields
         private void LoadSettings()
         {
+            //Load threads number settings
+            mMainController.ThreadsNumber = Int32.Parse(Properties.Settings.Default["ThreadsNumber"].ToString());
+            threadsNumber.Value = mMainController.ThreadsNumber;
+
+            //Load folders data
             chSaveLocation.CheckedChanged -= chSaveLocation_CheckedChanged;
             chSaveLocation.Checked =
                 bool.Parse(Properties.Settings.Default["Folders"].ToString());
@@ -142,11 +194,11 @@ namespace CryptographyProject
                 return;
             }
 
-            mFolders.InputFolder = Properties.Settings.Default["InputFolder"].ToString();
-            txtInputFolder.Text = mFolders.InputFolder;
+            mMainController.Folders.InputFolder = Properties.Settings.Default["InputFolder"].ToString();
+            txtInputFolder.Text = mMainController.Folders.InputFolder;
 
-            mFolders.OutputFolder = Properties.Settings.Default["OutputFolder"].ToString();
-            txtOutputFolder.Text = mFolders.OutputFolder;
+            mMainController.Folders.OutputFolder = Properties.Settings.Default["OutputFolder"].ToString();
+            txtOutputFolder.Text = mMainController.Folders.OutputFolder;
         }
 
         //Folder save
@@ -155,8 +207,8 @@ namespace CryptographyProject
         {
             try
             {
-                mFolders.InputFolder = txtInputFolder.Text;
-                mFolders.OutputFolder = txtOutputFolder.Text;
+                mMainController.Folders.InputFolder = txtInputFolder.Text;
+                mMainController.Folders.OutputFolder = txtOutputFolder.Text;
                 this.SaveSettings();
             }
             catch (Exception ex)
@@ -173,10 +225,20 @@ namespace CryptographyProject
             {
                 this.SaveSettings();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 this.ResetSettings();
             }
         }
+
+        //Change threads number
+        private void threadsNumber_ValueChanged(object sender, EventArgs e)
+        {
+            mMainController.ThreadsNumber = (int)threadsNumber.Value;
+            Properties.Settings.Default["ThreadsNumber"] = mMainController.ThreadsNumber;
+            Properties.Settings.Default.Save();
+        }
+
+
     }
 }

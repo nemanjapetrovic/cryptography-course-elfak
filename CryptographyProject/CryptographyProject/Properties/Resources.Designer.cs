@@ -69,23 +69,5 @@ namespace CryptographyProject.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to S T A R T.
-        /// </summary>
-        internal static string Start {
-            get {
-                return ResourceManager.GetString("Start", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to S T O P.
-        /// </summary>
-        internal static string Stop {
-            get {
-                return ResourceManager.GetString("Stop", resourceCulture);
-            }
-        }
     }
 }
