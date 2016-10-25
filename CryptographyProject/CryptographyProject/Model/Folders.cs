@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace CryptographyProject.Logic
+namespace CryptographyProject.Model
 {
     public class Folders
     {              

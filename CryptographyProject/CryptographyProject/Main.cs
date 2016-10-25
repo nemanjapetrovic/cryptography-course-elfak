@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using CryptographyProject.Logic;
+using CryptographyProject.Controller;
+using CryptographyProject.Model;
 
 namespace CryptographyProject
 {
     public partial class Main : Form
     {
         //My data
-        
         private MainController mMainController;
 
         //Constructor
@@ -18,7 +18,7 @@ namespace CryptographyProject
 
             //Initialize my data
             mMainController = new MainController();
-            mMainController.Folders = new Folders();
+            mMainController.DataModel.Folders = new Folders();
 
             //Load the settings
             try
@@ -38,8 +38,8 @@ namespace CryptographyProject
             {
                 if (dialogFolder.ShowDialog() == DialogResult.OK)
                 {
-                    mMainController.Folders.InputFolder = dialogFolder.SelectedPath;
-                    txtInputFolder.Text = mMainController.Folders.InputFolder;
+                    mMainController.DataModel.Folders.InputFolder = dialogFolder.SelectedPath;
+                    txtInputFolder.Text = mMainController.DataModel.Folders.InputFolder;
                 }
             }
             catch (Exception ex)
@@ -55,8 +55,8 @@ namespace CryptographyProject
             {
                 if (dialogFolder.ShowDialog() == DialogResult.OK)
                 {
-                    mMainController.Folders.OutputFolder = dialogFolder.SelectedPath;
-                    txtOutputFolder.Text = mMainController.Folders.OutputFolder;
+                    mMainController.DataModel.Folders.OutputFolder = dialogFolder.SelectedPath;
+                    txtOutputFolder.Text = mMainController.DataModel.Folders.OutputFolder;
                 }
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace CryptographyProject
             {
                 listAlgorithms.SetItemChecked(selectedItems[0], false);
             }
-            mMainController.AlgorithmIndex = listAlgorithms.SelectedIndex;
+            mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
         }
 
         //This function will enable controls if status = true, else it will disable all the controls
@@ -96,7 +96,7 @@ namespace CryptographyProject
         private void Started()
         {
             //Model
-            mMainController.CoderStarted = true;
+            mMainController.DataModel.CoderStarted = true;
             //Design            
             btnMain.Text = "S T O P";
             btnMain.ForeColor = Color.FromArgb(0x00FF0000);
@@ -114,7 +114,7 @@ namespace CryptographyProject
         private void Ended()
         {
             //Model
-            mMainController.CoderStarted = false;
+            mMainController.DataModel.CoderStarted = false;
             //Design
             btnMain.Text = "S T A R T";
             btnMain.ForeColor = Color.FromArgb(0x0000FF00);
@@ -125,7 +125,7 @@ namespace CryptographyProject
         //Main button - start/stop the program
         private void btnMain_Click(object sender, EventArgs e)
         {
-            if (mMainController.CoderStarted)
+            if (mMainController.DataModel.CoderStarted)
             {
                 //Stop the coder
                 this.Ended();
@@ -148,10 +148,10 @@ namespace CryptographyProject
 
             //Save the data
             Properties.Settings.Default["InputFolder"] = (chSaveLocation.Checked)
-                ? mMainController.Folders.InputFolder
+                ? mMainController.DataModel.Folders.InputFolder
                 : string.Empty;
             Properties.Settings.Default["OutputFolder"] = (chSaveLocation.Checked)
-                ? mMainController.Folders.OutputFolder
+                ? mMainController.DataModel.Folders.OutputFolder
                 : string.Empty;
 
             Properties.Settings.Default.Save();
@@ -180,8 +180,8 @@ namespace CryptographyProject
         private void LoadSettings()
         {
             //Load threads number settings
-            mMainController.ThreadsNumber = Int32.Parse(Properties.Settings.Default["ThreadsNumber"].ToString());
-            threadsNumber.Value = mMainController.ThreadsNumber;
+            mMainController.DataModel.ThreadsNumber = Int32.Parse(Properties.Settings.Default["ThreadsNumber"].ToString());
+            threadsNumber.Value = mMainController.DataModel.ThreadsNumber;
 
             //Load folders data
             chSaveLocation.CheckedChanged -= chSaveLocation_CheckedChanged;
@@ -194,11 +194,11 @@ namespace CryptographyProject
                 return;
             }
 
-            mMainController.Folders.InputFolder = Properties.Settings.Default["InputFolder"].ToString();
-            txtInputFolder.Text = mMainController.Folders.InputFolder;
+            mMainController.DataModel.Folders.InputFolder = Properties.Settings.Default["InputFolder"].ToString();
+            txtInputFolder.Text = mMainController.DataModel.Folders.InputFolder;
 
-            mMainController.Folders.OutputFolder = Properties.Settings.Default["OutputFolder"].ToString();
-            txtOutputFolder.Text = mMainController.Folders.OutputFolder;
+            mMainController.DataModel.Folders.OutputFolder = Properties.Settings.Default["OutputFolder"].ToString();
+            txtOutputFolder.Text = mMainController.DataModel.Folders.OutputFolder;
         }
 
         //Folder save
@@ -207,8 +207,8 @@ namespace CryptographyProject
         {
             try
             {
-                mMainController.Folders.InputFolder = txtInputFolder.Text;
-                mMainController.Folders.OutputFolder = txtOutputFolder.Text;
+                mMainController.DataModel.Folders.InputFolder = txtInputFolder.Text;
+                mMainController.DataModel.Folders.OutputFolder = txtOutputFolder.Text;
                 this.SaveSettings();
             }
             catch (Exception ex)
@@ -234,8 +234,8 @@ namespace CryptographyProject
         //Change threads number
         private void threadsNumber_ValueChanged(object sender, EventArgs e)
         {
-            mMainController.ThreadsNumber = (int)threadsNumber.Value;
-            Properties.Settings.Default["ThreadsNumber"] = mMainController.ThreadsNumber;
+            mMainController.DataModel.ThreadsNumber = (int)threadsNumber.Value;
+            Properties.Settings.Default["ThreadsNumber"] = mMainController.DataModel.ThreadsNumber;
             Properties.Settings.Default.Save();
         }
 

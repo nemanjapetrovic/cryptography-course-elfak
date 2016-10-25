@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace CryptographyProject.Logic
+namespace CryptographyProject.Model
 {
-    public class MainController
+    public class DataModel
     {
         //Folders
         private Folders _folders;
@@ -39,22 +38,6 @@ namespace CryptographyProject.Logic
         {
             set { _algorithmIndex = value; }
             get { return _algorithmIndex; }
-        }
-
-        //Validator
-        public bool ValidateData()
-        {
-            return false;
-        }
-
-        public void StartTheProcess()
-        {
-            
-        }
-
-        public void StopTheProcess()
-        {
-            
         }
     }
 }
