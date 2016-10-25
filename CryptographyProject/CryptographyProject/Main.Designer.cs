@@ -45,10 +45,16 @@
             this.dialogFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.threadsNumber = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.radioEnc = new System.Windows.Forms.RadioButton();
+            this.radioDec = new System.Windows.Forms.RadioButton();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -159,6 +165,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.groupBox5);
+            this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.listAlgorithms);
             this.groupBox3.Location = new System.Drawing.Point(12, 136);
             this.groupBox3.Name = "groupBox3";
@@ -178,7 +186,7 @@
             "Algorithm 4"});
             this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
             this.listAlgorithms.Name = "listAlgorithms";
-            this.listAlgorithms.Size = new System.Drawing.Size(501, 94);
+            this.listAlgorithms.Size = new System.Drawing.Size(240, 94);
             this.listAlgorithms.TabIndex = 1;
             this.listAlgorithms.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listAlgorithms_ItemCheck);
             // 
@@ -188,7 +196,7 @@
             this.btnMain.ForeColor = System.Drawing.Color.Green;
             this.btnMain.Location = new System.Drawing.Point(12, 264);
             this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(391, 44);
+            this.btnMain.Size = new System.Drawing.Size(513, 44);
             this.btnMain.TabIndex = 0;
             this.btnMain.Text = "S T A R T";
             this.btnMain.UseVisualStyleBackColor = true;
@@ -196,7 +204,7 @@
             // 
             // threadsNumber
             // 
-            this.threadsNumber.Location = new System.Drawing.Point(409, 285);
+            this.threadsNumber.Location = new System.Drawing.Point(19, 55);
             this.threadsNumber.Minimum = new decimal(new int[] {
             1,
             0,
@@ -215,19 +223,63 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(406, 264);
+            this.label3.Location = new System.Drawing.Point(16, 28);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "Threads numbers:";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.radioDec);
+            this.groupBox4.Controls.Add(this.radioEnc);
+            this.groupBox4.Location = new System.Drawing.Point(252, 19);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(112, 97);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Option";
+            // 
+            // radioEnc
+            // 
+            this.radioEnc.AutoSize = true;
+            this.radioEnc.Checked = true;
+            this.radioEnc.Location = new System.Drawing.Point(20, 29);
+            this.radioEnc.Name = "radioEnc";
+            this.radioEnc.Size = new System.Drawing.Size(75, 17);
+            this.radioEnc.TabIndex = 0;
+            this.radioEnc.TabStop = true;
+            this.radioEnc.Text = "Encryption";
+            this.radioEnc.UseVisualStyleBackColor = true;
+            this.radioEnc.Click += new System.EventHandler(this.radioEnc_Click);
+            // 
+            // radioDec
+            // 
+            this.radioDec.AutoSize = true;
+            this.radioDec.Location = new System.Drawing.Point(20, 58);
+            this.radioDec.Name = "radioDec";
+            this.radioDec.Size = new System.Drawing.Size(76, 17);
+            this.radioDec.TabIndex = 1;
+            this.radioDec.Text = "Decryption";
+            this.radioDec.UseVisualStyleBackColor = true;
+            this.radioDec.Click += new System.EventHandler(this.radioDec_Click);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label3);
+            this.groupBox5.Controls.Add(this.threadsNumber);
+            this.groupBox5.Location = new System.Drawing.Point(371, 19);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(136, 97);
+            this.groupBox5.TabIndex = 3;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Threads";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 323);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.threadsNumber);
             this.Controls.Add(this.btnMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -244,8 +296,11 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -267,5 +322,9 @@
         private System.Windows.Forms.CheckBox chSaveLocation;
         private System.Windows.Forms.NumericUpDown threadsNumber;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton radioDec;
+        private System.Windows.Forms.RadioButton radioEnc;
+        private System.Windows.Forms.GroupBox groupBox5;
     }
 }

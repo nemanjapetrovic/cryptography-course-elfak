@@ -68,5 +68,13 @@ namespace CryptographyProject.Model
                 return _algorithmName;
             }
         }
+
+        //Encryption or decryption
+        private bool _encryptionChosen;
+        public bool EncryptionChosen
+        {
+            set { _encryptionChosen = value; }
+            get { return _encryptionChosen; }
+        }
     }
 }

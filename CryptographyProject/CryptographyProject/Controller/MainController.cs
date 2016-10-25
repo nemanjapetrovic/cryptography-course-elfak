@@ -72,7 +72,7 @@ namespace CryptographyProject.Controller
             watcher.Path = this.DataModel.Folders.InputFolder;
             watcher.EnableRaisingEvents = true;
 
-            //Start the LoadedFilesControllerProcesses -------------
+            //Start the LoadedFilesControllerProcesses
             new Thread(() => loadedFilesController.StartEncDec(this.DataModel)).Start();
         }
 
@@ -87,8 +87,8 @@ namespace CryptographyProject.Controller
             //Stop the file watcher
             watcher.EnableRaisingEvents = false;
 
-            //Stop the LoadedFilesControllerProcesses -----------
-
+            //Stop the LoadedFilesControllerProcesses
+            loadedFilesController.StopEncDec();
         }
 
         //File validator
@@ -99,9 +99,15 @@ namespace CryptographyProject.Controller
             {
                 return true;
             }
-            
-            //File was already encoded validation - validation by file name
-            if (file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+
+            //Want encryption and file cotains ENC prefix the name property
+            if (this.DataModel.EncryptionChosen && file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+            {
+                return true;
+            }
+
+            //Want decryption and file does not contain ENC prefix in the name property
+            if(!this.DataModel.EncryptionChosen && !file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
             {
                 return true;
             }

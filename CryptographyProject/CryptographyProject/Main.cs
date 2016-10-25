@@ -190,6 +190,9 @@ namespace CryptographyProject
         //Load the settings and set the input and output folder fields
         private void LoadSettings()
         {
+            //Radio buttons enc/dec
+            mMainController.DataModel.EncryptionChosen = true;
+
             //Load threads number settings
             mMainController.DataModel.ThreadsNumber = Int32.Parse(Properties.Settings.Default["ThreadsNumber"].ToString());
             threadsNumber.Value = mMainController.DataModel.ThreadsNumber;
@@ -249,7 +252,15 @@ namespace CryptographyProject
             Properties.Settings.Default["ThreadsNumber"] = mMainController.DataModel.ThreadsNumber;
             Properties.Settings.Default.Save();
         }
+        
+        private void radioEnc_Click(object sender, EventArgs e)
+        {
+            mMainController.DataModel.EncryptionChosen = true;
+        }
 
-
+        private void radioDec_Click(object sender, EventArgs e)
+        {
+            mMainController.DataModel.EncryptionChosen = false;
+        }
     }
 }

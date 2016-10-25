@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Concurrent;
 using CryptographyProject.Model;
+using System.Threading;
 
 namespace CryptographyProject.Controller
 {
     public class LoadedFilesController
     {
+        //Queue for files
         private BlockingCollection<FileInfo> queueFiles;//Files (Disposable!)
+
+        //Thread data
         private static int _NUMBER_OF_THREADS; //Number of current threads
         private static bool _isRunning;
 
@@ -20,6 +24,7 @@ namespace CryptographyProject.Controller
         {
             queueFiles = new BlockingCollection<FileInfo>();
 
+            //Reset
             _NUMBER_OF_THREADS = 0;
             _isRunning = false;
         }
@@ -29,16 +34,6 @@ namespace CryptographyProject.Controller
         {
             this.queueFiles.Add(file);
         }
-
-        //Imam lock prom koju stavim na true u start, zatim pokrenem while(true)
-        //i sve tako dokle god ne popunim broj procesa pozivam ReadFileAndEcny ili onu drugu
-        //u zavisnosti od sta se trazi, kada to zavrsim.
-        //pri pozivu novog taska, aktivirace se i izvrsavace se novi thread.
-        //kada thread zavrsi posao enc/dec treba da pozove handler, koji smanjuje broj ukupnih aktivnih threadova
-        //tako da while petlja moze da aktivira novi thread
-        //kada aktivira se stop, loc se setuje na false, tada se gasi ona while petlja i time vidimo da smo zavrsili enc/dec
-        //prilikom gasenja pozeljno je da se disposuju svi objekti
-        //takodje na event handleru koji se aktivira kad se zavrsi thread snimiti fajl u bazu
 
         //Starts the whole process
         public void StartEncDec(FormModel model)
@@ -54,7 +49,15 @@ namespace CryptographyProject.Controller
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
-                    Task task = Task.Factory.StartNew(() => ReadFileAndEncrypt()).ContinueWith(tsk => { TaskEnd(); });
+
+                    if (model.EncryptionChosen)
+                    {
+                        new Thread(() => ReadFileAndEncrypt()).Start();
+                    }
+                    else
+                    {
+                        new Thread(() => ReadFileAndDecrypt()).Start();
+                    }
                 }
             }
         }
@@ -65,25 +68,51 @@ namespace CryptographyProject.Controller
             LoadedFilesController._isRunning = false;
         }
 
-        //Call this as event handler when task is done
-        private void TaskEnd()
+        //Call this as event handler when thread ends --------------DB
+        private void ThreadEnds()
         {
             LoadedFilesController._NUMBER_OF_THREADS--;
         }
 
-        //Encryption
+        //Encryption -----------
         private void ReadFileAndEncrypt()
         {
-            for(int i = 0; i< 1000;i++)
+            try
             {
-                Console.WriteLine(i);
+                for (int i = 0; i < 1000; i++)
+                {
+                    Console.WriteLine(i);
+                }
             }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                this.ThreadEnds();
+            }
+
         }
 
-        //Decryption
+        //Decryption ------------
         private void ReadFileAndDecrypt()
         {
+            try
+            {
+                for (int i = 0; i < 1000; i++)
+                {
+                    Console.WriteLine(i);
+                }
+            }
+            catch (Exception ex)
+            {
 
+            }
+            finally
+            {
+                this.ThreadEnds();
+            }
         }
     }
 }
