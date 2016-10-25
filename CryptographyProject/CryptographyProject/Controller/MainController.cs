@@ -56,7 +56,7 @@ namespace CryptographyProject.Controller
             var outputFolder = this.DataModel.Folders.OutputFolder;
         }
 
-        //Starting the watcher
+        //Starting the watcher and the main functionality
         public void StartTheProcess()
         {
             if (watcher == null)
@@ -70,9 +70,11 @@ namespace CryptographyProject.Controller
             //Start the file watcher
             watcher.Path = this.DataModel.Folders.InputFolder;
             watcher.EnableRaisingEvents = true;
+
+            //Start the LoadedFilesControllerProcesses -------------
         }
 
-        //Stopping the watcher
+        //Stopping the watcher and the main functionality
         public void StopTheProcess()
         {
             if (watcher == null)
@@ -82,19 +84,27 @@ namespace CryptographyProject.Controller
 
             //Stop the file watcher
             watcher.EnableRaisingEvents = false;
+
+            //Stop the LoadedFilesControllerProcesses -----------
         }
 
         //File validator
         private bool FileNotValid(FileInfo file)
         {
+            //Extension validation
             if (!file.Extension.Equals(".txt"))
             {
                 return true;
             }
+            
+            //File was already encoded validation - validation by file name
             if (file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
             {
                 return true;
             }
+
+            //File was in database, so we can skip it, this file was encrypted sometime -----------
+
 
             return false;
         }

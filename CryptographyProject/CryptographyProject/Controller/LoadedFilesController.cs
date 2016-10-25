@@ -12,15 +12,43 @@ namespace CryptographyProject.Controller
     {
         //Files (Disposable!)
         private BlockingCollection<FileInfo> queueFiles;
+        private static int _NUMBER_OF_THREADS; //Number of current threads
 
+        //Constructor
         public LoadedFilesController()
         {
-            queueFiles = new BlockingCollection<FileInfo>();            
+            queueFiles = new BlockingCollection<FileInfo>();
+            _NUMBER_OF_THREADS = 0;
         }
 
+        //Adds a file in a queue
         public void Add(FileInfo file)
         {
             this.queueFiles.Add(file);
+        }
+
+        //Starts the whole process
+        public void StartEncDec()
+        {
+            
+        }
+        
+        //Stops the whole process
+        public void StopEncDec()
+        {
+
+        }
+
+        //Encryption
+        private void ReadFileAndEncrypt()
+        {
+
+        }
+
+        //Decryption
+        private void ReadFileAndDecrypt()
+        {
+
         }
     }
 }
