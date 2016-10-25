@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptographyProject.Model;
+using System.IO;
 
 namespace CryptographyProject.Controller
 {
@@ -25,15 +26,20 @@ namespace CryptographyProject.Controller
         }
 
         //File Controller
-        private LoadedFilesController fileController;
+        private LoadedFilesController loadedFilesController;
 
         //FileWatcher
-
+        private FileSystemWatcher watcher;
 
         //Constructor
         public MainController()
         {
-            fileController = new LoadedFilesController();
+            loadedFilesController = new LoadedFilesController();
+            watcher = new FileSystemWatcher();
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                    | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.Filter = "*.txt";
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
         }
 
         //Validator
@@ -42,21 +48,87 @@ namespace CryptographyProject.Controller
             //This is not the right way to do this, we should use ValidationArguments for the properties of the classes
 
             //Algorithm selection validation - if it's not valid it will throw exception
-            var alg = DataModel.AlgorithmIndex;
+            var alg = this.DataModel.AlgorithmIndex;
+            var algname = this.DataModel.AlgorithmName;
 
             //Folders validator - if it's not valid it will throw exception
-            var inputFolder = DataModel.Folders.InputFolder;
-            var outputFolder = DataModel.Folders.OutputFolder;
+            var inputFolder = this.DataModel.Folders.InputFolder;
+            var outputFolder = this.DataModel.Folders.OutputFolder;
         }
 
+        //Starting the watcher
         public void StartTheProcess()
         {
+            if (watcher == null)
+            {
+                throw new Exception("File watcher is null!");
+            }
 
+            //Load the existing files
+            this.LoadAllFiles();
+
+            //Start the file watcher
+            watcher.Path = this.DataModel.Folders.InputFolder;
+            watcher.EnableRaisingEvents = true;
         }
 
+        //Stopping the watcher
         public void StopTheProcess()
         {
+            if (watcher == null)
+            {
+                throw new Exception("File watcher is null!");
+            }
 
+            //Stop the file watcher
+            watcher.EnableRaisingEvents = false;
+        }
+
+        //File validator
+        private bool FileNotValid(FileInfo file)
+        {
+            if (!file.Extension.Equals(".txt"))
+            {
+                return true;
+            }
+            if (file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        //Load all files at the start
+        private void LoadAllFiles()
+        {
+            FileInfo file = null;
+            string[] files = Directory.GetFiles(this.DataModel.Folders.InputFolder);
+            foreach (string item in files)
+            {
+                file = new FileInfo(item);
+                if (FileNotValid(file))//Validate
+                {
+                    continue;
+                }
+                loadedFilesController.Add(file);
+            }
+        }
+
+        //Watcher ChangeEvent
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            var file = new FileInfo(e.FullPath);
+
+            //Validate if the file is NOT:
+            // - already encrypted using -> FormModel.ENC
+            // - old (file was encrypted before, there is data in the "database" using -> 
+            if (FileNotValid(file))
+            {
+                return;
+            }
+
+            loadedFilesController.Add(file);
         }
     }
 }

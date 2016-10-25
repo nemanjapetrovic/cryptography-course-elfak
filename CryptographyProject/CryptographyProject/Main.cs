@@ -19,7 +19,7 @@ namespace CryptographyProject
             //Initialize my data
             mMainController = new MainController();
             mMainController.DataModel.Folders = new Folders();
-
+            
             //Load the settings
             try
             {
@@ -79,6 +79,7 @@ namespace CryptographyProject
                 listAlgorithms.SetItemChecked(selectedItems[0], false);
             }
             mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
+            mMainController.DataModel.AlgorithmName = listAlgorithms.SelectedItem.ToString().ToLower();
         }
 
         //This function will enable controls if status = true, else it will disable all the controls

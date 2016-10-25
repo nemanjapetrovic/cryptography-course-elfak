@@ -11,6 +11,10 @@ namespace CryptographyProject.Model
     /// </summary>
     public class FormModel
     {
+        //Additional file name
+        //This should be placed in resource file
+        public static string ENC = "enc";
+
         //Folders
         private Folders _folders;
         public Folders Folders
@@ -47,6 +51,21 @@ namespace CryptographyProject.Model
                     throw new Exception("Choose one algorithm!");
                 }
                 return _algorithmIndex;
+            }
+        }
+
+        //Algorithm name
+        private string _algorithmName;
+        public string AlgorithmName
+        {
+            set { _algorithmName = value; }
+            get
+            {
+                if (string.IsNullOrEmpty(_algorithmName))
+                {
+                    throw new Exception("Choose one algorithm!");
+                }
+                return _algorithmName;
             }
         }
     }
