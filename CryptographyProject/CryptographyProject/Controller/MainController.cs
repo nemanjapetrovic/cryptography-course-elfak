@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptographyProject.Model;
 using System.IO;
+using System.Threading;
 
 namespace CryptographyProject.Controller
 {
@@ -72,6 +73,7 @@ namespace CryptographyProject.Controller
             watcher.EnableRaisingEvents = true;
 
             //Start the LoadedFilesControllerProcesses -------------
+            new Thread(() => loadedFilesController.StartEncDec(this.DataModel)).Start();
         }
 
         //Stopping the watcher and the main functionality
@@ -86,6 +88,7 @@ namespace CryptographyProject.Controller
             watcher.EnableRaisingEvents = false;
 
             //Stop the LoadedFilesControllerProcesses -----------
+
         }
 
         //File validator
