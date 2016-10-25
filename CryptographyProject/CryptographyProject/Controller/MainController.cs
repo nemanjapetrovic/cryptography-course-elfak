@@ -10,33 +10,53 @@ namespace CryptographyProject.Controller
 {
     public class MainController
     {
-        //Data model
-        private DataModel _dataModel;
-        public DataModel DataModel
+        //Form model
+        private FormModel _dataModel;
+        public FormModel DataModel
         {
-            get{
-                if(_dataModel == null)
+            get
+            {
+                if (_dataModel == null)
                 {
-                    _dataModel = new DataModel();
+                    _dataModel = new FormModel();
                 }
                 return _dataModel;
             }
         }
 
-        //Validator
-        public bool ValidateData()
+        //File Controller
+        private LoadedFilesController fileController;
+
+        //FileWatcher
+
+
+        //Constructor
+        public MainController()
         {
-            return false;
+            fileController = new LoadedFilesController();
+        }
+
+        //Validator
+        public void ValidateData()
+        {
+            //This is not the right way to do this, we should use ValidationArguments for the properties of the classes
+
+            //Algorithm selection validation - if it's not valid it will throw exception
+            var alg = DataModel.AlgorithmIndex;
+
+            //Folders validator - if it's not valid it will throw exception
+            var inputFolder = DataModel.Folders.InputFolder;
+            var outputFolder = DataModel.Folders.OutputFolder;
         }
 
         public void StartTheProcess()
         {
-            
+
         }
 
         public void StopTheProcess()
         {
-            
+
         }
     }
 }

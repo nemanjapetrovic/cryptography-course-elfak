@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -57,6 +57,7 @@
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controller\LoadedFilesController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

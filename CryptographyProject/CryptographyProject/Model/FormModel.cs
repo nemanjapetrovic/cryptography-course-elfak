@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptographyProject.Model
 {
-    public class DataModel
+    /// <summary>
+    /// Collecting data from the form controls.
+    /// </summary>
+    public class FormModel
     {
         //Folders
         private Folders _folders;
@@ -33,11 +36,18 @@ namespace CryptographyProject.Model
         }
 
         //Algoritham choice
-        private int _algorithmIndex;
+        private int _algorithmIndex = -1;
         public int AlgorithmIndex
         {
             set { _algorithmIndex = value; }
-            get { return _algorithmIndex; }
+            get
+            {
+                if (_algorithmIndex < 0)
+                {
+                    throw new Exception("Choose one algorithm!");
+                }
+                return _algorithmIndex;
+            }
         }
     }
 }

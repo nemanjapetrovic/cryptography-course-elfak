@@ -1,14 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace CryptographyProject.Model
 {
+    /// <summary>
+    /// Insert in FormModel class.
+    /// </summary>
     public class Folders
     {              
         private string _inputFolder;

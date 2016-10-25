@@ -82,11 +82,11 @@ namespace CryptographyProject
         }
 
         //This function will enable controls if status = true, else it will disable all the controls
-        private void EnableControls(Control con,bool status = false)
+        private void EnableControls(Control con, bool status = false)
         {
             foreach (Control c in con.Controls)
             {
-                EnableControls(c,status);
+                EnableControls(c, status);
             }
             con.Enabled = status;
         }
@@ -125,17 +125,27 @@ namespace CryptographyProject
         //Main button - start/stop the program
         private void btnMain_Click(object sender, EventArgs e)
         {
-            if (mMainController.DataModel.CoderStarted)
+            try
             {
-                //Stop the coder
-                this.Ended();
-                mMainController.StopTheProcess();
+                //Validation
+                mMainController.ValidateData();
+
+                if (mMainController.DataModel.CoderStarted)
+                {
+                    //Stop the coder
+                    this.Ended();
+                    mMainController.StopTheProcess();
+                }
+                else
+                {
+                    //Start the coder
+                    this.Started();
+                    mMainController.StartTheProcess();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //Start the coder
-                this.Started();
-                mMainController.StartTheProcess();
+                MessageBox.Show(ex.Message);
             }
         }
 
