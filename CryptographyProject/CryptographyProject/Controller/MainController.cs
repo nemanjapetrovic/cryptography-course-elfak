@@ -55,6 +55,9 @@ namespace CryptographyProject.Controller
             //Folders validator - if it's not valid it will throw exception
             var inputFolder = this.DataModel.Folders.InputFolder;
             var outputFolder = this.DataModel.Folders.OutputFolder;
+
+            //Encryption alphabet
+            var encryptionAlphabet = EncryptionAlgorithms.SimpleSubstituionCipher.EncryptionAlphabetChars;
         }
 
         //Starting the watcher and the main functionality

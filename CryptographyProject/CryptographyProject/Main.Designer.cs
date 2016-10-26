@@ -40,21 +40,21 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.logView = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.threadsNumber = new System.Windows.Forms.NumericUpDown();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.radioDec = new System.Windows.Forms.RadioButton();
+            this.radioEnc = new System.Windows.Forms.RadioButton();
             this.listAlgorithms = new System.Windows.Forms.CheckedListBox();
             this.btnMain = new System.Windows.Forms.Button();
             this.dialogFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.threadsNumber = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.radioEnc = new System.Windows.Forms.RadioButton();
-            this.radioDec = new System.Windows.Forms.RadioButton();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).BeginInit();
             this.groupBox4.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -175,32 +175,25 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Encryption algorithm";
             // 
-            // listAlgorithms
+            // groupBox5
             // 
-            this.listAlgorithms.CheckOnClick = true;
-            this.listAlgorithms.FormattingEnabled = true;
-            this.listAlgorithms.Items.AddRange(new object[] {
-            "Algorithm 1",
-            "Algorithm 2",
-            "Algorithm 3",
-            "Algorithm 4"});
-            this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
-            this.listAlgorithms.Name = "listAlgorithms";
-            this.listAlgorithms.Size = new System.Drawing.Size(240, 94);
-            this.listAlgorithms.TabIndex = 1;
-            this.listAlgorithms.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listAlgorithms_ItemCheck);
+            this.groupBox5.Controls.Add(this.label3);
+            this.groupBox5.Controls.Add(this.threadsNumber);
+            this.groupBox5.Location = new System.Drawing.Point(371, 19);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(136, 97);
+            this.groupBox5.TabIndex = 3;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Threads";
             // 
-            // btnMain
+            // label3
             // 
-            this.btnMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMain.ForeColor = System.Drawing.Color.Green;
-            this.btnMain.Location = new System.Drawing.Point(12, 264);
-            this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(513, 44);
-            this.btnMain.TabIndex = 0;
-            this.btnMain.Text = "S T A R T";
-            this.btnMain.UseVisualStyleBackColor = true;
-            this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 28);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(92, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Threads numbers:";
             // 
             // threadsNumber
             // 
@@ -220,15 +213,6 @@
             0});
             this.threadsNumber.ValueChanged += new System.EventHandler(this.threadsNumber_ValueChanged);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 28);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(92, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Threads numbers:";
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.radioDec);
@@ -239,6 +223,17 @@
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Option";
+            // 
+            // radioDec
+            // 
+            this.radioDec.AutoSize = true;
+            this.radioDec.Location = new System.Drawing.Point(20, 58);
+            this.radioDec.Name = "radioDec";
+            this.radioDec.Size = new System.Drawing.Size(76, 17);
+            this.radioDec.TabIndex = 1;
+            this.radioDec.Text = "Decryption";
+            this.radioDec.UseVisualStyleBackColor = true;
+            this.radioDec.Click += new System.EventHandler(this.radioDec_Click);
             // 
             // radioEnc
             // 
@@ -253,27 +248,29 @@
             this.radioEnc.UseVisualStyleBackColor = true;
             this.radioEnc.Click += new System.EventHandler(this.radioEnc_Click);
             // 
-            // radioDec
+            // listAlgorithms
             // 
-            this.radioDec.AutoSize = true;
-            this.radioDec.Location = new System.Drawing.Point(20, 58);
-            this.radioDec.Name = "radioDec";
-            this.radioDec.Size = new System.Drawing.Size(76, 17);
-            this.radioDec.TabIndex = 1;
-            this.radioDec.Text = "Decryption";
-            this.radioDec.UseVisualStyleBackColor = true;
-            this.radioDec.Click += new System.EventHandler(this.radioDec_Click);
+            this.listAlgorithms.CheckOnClick = true;
+            this.listAlgorithms.FormattingEnabled = true;
+            this.listAlgorithms.Items.AddRange(new object[] {
+            "Simple substitution"});
+            this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
+            this.listAlgorithms.Name = "listAlgorithms";
+            this.listAlgorithms.Size = new System.Drawing.Size(240, 94);
+            this.listAlgorithms.TabIndex = 1;
+            this.listAlgorithms.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listAlgorithms_ItemCheck);
             // 
-            // groupBox5
+            // btnMain
             // 
-            this.groupBox5.Controls.Add(this.label3);
-            this.groupBox5.Controls.Add(this.threadsNumber);
-            this.groupBox5.Location = new System.Drawing.Point(371, 19);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(136, 97);
-            this.groupBox5.TabIndex = 3;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Threads";
+            this.btnMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMain.ForeColor = System.Drawing.Color.Green;
+            this.btnMain.Location = new System.Drawing.Point(12, 264);
+            this.btnMain.Name = "btnMain";
+            this.btnMain.Size = new System.Drawing.Size(513, 44);
+            this.btnMain.TabIndex = 0;
+            this.btnMain.Text = "S T A R T";
+            this.btnMain.UseVisualStyleBackColor = true;
+            this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
             // 
             // Main
             // 
@@ -295,11 +292,11 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }

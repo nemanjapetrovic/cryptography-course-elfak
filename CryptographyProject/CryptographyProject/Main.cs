@@ -72,7 +72,7 @@ namespace CryptographyProject
             {
                 return;
             }
-
+            
             var selectedItems = listAlgorithms.CheckedIndices;
             if (selectedItems.Count > 0)
             {
@@ -80,6 +80,14 @@ namespace CryptographyProject
             }
             mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
             mMainController.DataModel.AlgorithmName = listAlgorithms.SelectedItem.ToString().ToLower();
+
+            switch(mMainController.DataModel.AlgorithmName)
+            {
+                case "simple substitution":
+                    Form f = new SimpleSubstitutionAlphabet();
+                    f.Show();
+                    break;
+            }
         }
 
         //This function will enable controls if status = true, else it will disable all the controls
@@ -262,5 +270,7 @@ namespace CryptographyProject
         {
             mMainController.DataModel.EncryptionChosen = false;
         }
+
+    
     }
 }

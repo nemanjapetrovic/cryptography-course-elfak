@@ -7,3 +7,4 @@ D:\GitHub\cryptography_course_elfak\CryptographyProject\CryptographyProject\obj\
 D:\GitHub\cryptography_course_elfak\CryptographyProject\CryptographyProject\obj\Debug\CryptographyProject.exe
 D:\GitHub\cryptography_course_elfak\CryptographyProject\CryptographyProject\obj\Debug\CryptographyProject.pdb
 D:\GitHub\cryptography_course_elfak\CryptographyProject\CryptographyProject\obj\Debug\CryptographyProject.Main.resources
+D:\GitHub\cryptography_course_elfak\CryptographyProject\CryptographyProject\obj\Debug\CryptographyProject.SimpleSubstitutionAlphabet.resources
