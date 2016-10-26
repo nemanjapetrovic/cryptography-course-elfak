@@ -164,5 +164,10 @@ namespace CryptographyProject.Controller
 
             loadedFilesController.Add(file);
         }
+
+        public void FlushHistory()
+        {
+            historyController.ClearHistory();
+        }
     }
 }

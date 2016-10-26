@@ -49,12 +49,15 @@
             this.listAlgorithms = new System.Windows.Forms.CheckedListBox();
             this.btnMain = new System.Windows.Forms.Button();
             this.dialogFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnHistory = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).BeginInit();
             this.groupBox4.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -264,19 +267,40 @@
             // 
             this.btnMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMain.ForeColor = System.Drawing.Color.Green;
-            this.btnMain.Location = new System.Drawing.Point(12, 264);
+            this.btnMain.Location = new System.Drawing.Point(264, 267);
             this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(513, 44);
+            this.btnMain.Size = new System.Drawing.Size(261, 44);
             this.btnMain.TabIndex = 0;
             this.btnMain.Text = "S T A R T";
             this.btnMain.UseVisualStyleBackColor = true;
             this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.btnHistory);
+            this.groupBox6.Location = new System.Drawing.Point(12, 267);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(246, 44);
+            this.groupBox6.TabIndex = 1;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "History";
+            // 
+            // btnHistory
+            // 
+            this.btnHistory.Location = new System.Drawing.Point(46, 15);
+            this.btnHistory.Name = "btnHistory";
+            this.btnHistory.Size = new System.Drawing.Size(133, 23);
+            this.btnHistory.TabIndex = 0;
+            this.btnHistory.Text = "History Flush";
+            this.btnHistory.UseVisualStyleBackColor = true;
+            this.btnHistory.Click += new System.EventHandler(this.btnHistory_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 323);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.btnMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -297,6 +321,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.threadsNumber)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -323,5 +348,7 @@
         private System.Windows.Forms.RadioButton radioDec;
         private System.Windows.Forms.RadioButton radioEnc;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button btnHistory;
     }
 }

@@ -274,6 +274,9 @@ namespace CryptographyProject
             mMainController.DataModel.EncryptionChosen = false;
         }
 
-
+        private void btnHistory_Click(object sender, EventArgs e)
+        {
+            mMainController.FlushHistory();
+        }
     }
 }
