@@ -24,11 +24,15 @@ namespace CryptographyProject.Controller
         private static int _NUMBER_OF_THREADS; //Number of current threads
         private static bool _isRunning;
 
+        //HistoryController
+        private HistoryController historyController;
+
         //Constructor
-        public LoadedFilesController()
+        public LoadedFilesController(HistoryController history)
         {
             loggerController = new LoggerController();
             queueFiles = new BlockingCollection<FileInfo>();
+            historyController = history;
 
             //Reset
             _NUMBER_OF_THREADS = 0;
@@ -88,15 +92,23 @@ namespace CryptographyProject.Controller
             LoadedFilesController._isRunning = false;
         }
 
-        //Call this as event handler when thread ends --------------DB
-        private void ThreadEnds()
+        //Call this as event handler when thread ends   -------
+        private void ThreadEnds(FileInfo file, bool threadSuccesfull)
         {
+            //History
+            if (threadSuccesfull)
+            {
+                historyController.AddToHistory(file.Name, file.FullName, file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss"));
+            }
+            //Threads number
             LoadedFilesController._NUMBER_OF_THREADS--;
+            //Log
             loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);
         }
 
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)
         {
+            bool threadSuccesfull = false;
             try
             {
                 //Create full valid path for an output file
@@ -127,20 +139,23 @@ namespace CryptographyProject.Controller
                         }
                     }
                 }
+                threadSuccesfull = true;
             }
             catch (Exception ex)
-            {                
+            {
                 loggerController.Add(" ? Enc exception: " + ex.Message);
+                threadSuccesfull = false;
             }
             finally
             {
-                this.ThreadEnds();
+                this.ThreadEnds(file, threadSuccesfull);
             }
 
         }
 
         public void SimpleSubstitutionDecryption(FileInfo file, FormModel model)
         {
+            bool threadSuccesfull = false;
             try
             {
                 //Create full valid path for an output file
@@ -167,14 +182,16 @@ namespace CryptographyProject.Controller
                         }
                     }
                 }
+                threadSuccesfull = true;
             }
             catch (Exception ex)
             {
                 loggerController.Add(" ? Dec exception: " + ex.Message);
+                threadSuccesfull = false;
             }
             finally
             {
-                this.ThreadEnds();
+                this.ThreadEnds(file, threadSuccesfull);
             }
         }
     }

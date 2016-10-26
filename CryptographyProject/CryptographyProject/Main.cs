@@ -139,9 +139,6 @@ namespace CryptographyProject
         {
             try
             {
-                //Validation
-                mMainController.ValidateData();
-
                 if (mMainController.DataModel.CoderStarted)
                 {
                     //Stop the coder
@@ -150,6 +147,9 @@ namespace CryptographyProject
                 }
                 else
                 {
+                    //Validation
+                    mMainController.ValidateData();
+
                     //Start the coder
                     this.Started();
                     mMainController.StartTheProcess();

@@ -32,12 +32,18 @@ namespace CryptographyProject.Controller
         //FileWatcher
         private FileSystemWatcher watcher;
 
+        //HistroyData
+        private HistoryController historyController;
+
         //Constructor
         public MainController()
         {
-            loadedFilesController = new LoadedFilesController();
+            historyController = new HistoryController();
+            loadedFilesController = new LoadedFilesController(historyController);
+
+            //Watcher
             watcher = new FileSystemWatcher();
-            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+            watcher.NotifyFilter = NotifyFilters.LastWrite
                     | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Filter = "*.txt";
             watcher.Changed += new FileSystemEventHandler(OnChanged);
@@ -92,6 +98,9 @@ namespace CryptographyProject.Controller
 
             //Stop the LoadedFilesControllerProcesses
             loadedFilesController.StopEncDec();
+
+            //Save the history
+            historyController.WriteHistory();
         }
 
         //File validator
@@ -110,13 +119,16 @@ namespace CryptographyProject.Controller
             }
 
             //Want decryption and file does not contain ENC prefix in the name property
-            if(!this.DataModel.EncryptionChosen && !file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+            if (!this.DataModel.EncryptionChosen && !file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
             {
                 return true;
             }
 
-            //File was in database, so we can skip it, this file was encrypted sometime -----------
-
+            //File was in database, so we can skip it, this file was encrypted sometime
+            if (historyController.FileExists(file))
+            {
+                return true;
+            }
 
             return false;
         }
