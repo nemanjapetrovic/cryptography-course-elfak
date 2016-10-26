@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\IEncryptionAlgorithm.cs" />
+    <Compile Include="Controller\LoggerController.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
     <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />

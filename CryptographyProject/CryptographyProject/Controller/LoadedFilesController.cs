@@ -8,11 +8,15 @@ using System.Collections.Concurrent;
 using CryptographyProject.Model;
 using System.Threading;
 using CryptographyProject.EncryptionAlgorithms;
+using System.Windows.Forms;
 
 namespace CryptographyProject.Controller
 {
     public class LoadedFilesController : IEncryptionAlgorithm
     {
+        //Logger
+        private LoggerController loggerController;
+
         //Queue for files
         private BlockingCollection<FileInfo> queueFiles;//Files (Disposable!)
 
@@ -23,27 +27,34 @@ namespace CryptographyProject.Controller
         //Constructor
         public LoadedFilesController()
         {
+            loggerController = new LoggerController();
             queueFiles = new BlockingCollection<FileInfo>();
 
             //Reset
             _NUMBER_OF_THREADS = 0;
             _isRunning = false;
+
+            //Starting the logger thread
+            new Thread(() => loggerController.PrintLog()).Start();
         }
 
         //Adds a file in a queue
         public void Add(FileInfo file)
         {
             this.queueFiles.Add(file);
+            loggerController.Add("Added file: " + file.Name);
         }
 
         //Starts the whole process
         public void StartEncDec(FormModel model)
         {
+            loggerController.Add(" # STARTING THE ENC/DEC");
             LoadedFilesController._isRunning = true;
             while (true)
             {
                 if (!LoadedFilesController._isRunning)
                 {
+                    loggerController.Add(" # STOPING THE ENC/DEC");
                     break;
                 }
 
@@ -66,9 +77,7 @@ namespace CryptographyProject.Controller
                                 }
                                 break;
                             }
-
-                        //default: // LOG this throw new Exception("Switch case algortihm does not exists!");
-                    }                    
+                    }
                 }
             }
         }
@@ -83,6 +92,7 @@ namespace CryptographyProject.Controller
         private void ThreadEnds()
         {
             LoadedFilesController._NUMBER_OF_THREADS--;
+            loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);
         }
 
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)
@@ -99,6 +109,7 @@ namespace CryptographyProject.Controller
                   .Append("_")
                   .Append(file.Name);
 
+                loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
@@ -118,8 +129,8 @@ namespace CryptographyProject.Controller
                 }
             }
             catch (Exception ex)
-            {
-                //Log the exception                
+            {                
+                loggerController.Add(" ? Enc exception: " + ex.Message);
             }
             finally
             {
@@ -137,7 +148,8 @@ namespace CryptographyProject.Controller
                 sb.Append(model.Folders.OutputFolder)
                   .Append("\\")
                   .Append(file.Name.Replace(FormModel.ENC, "").Replace(model.AlgorithmName, "").Replace("_", ""));
-                  
+
+                loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
@@ -158,7 +170,7 @@ namespace CryptographyProject.Controller
             }
             catch (Exception ex)
             {
-                //Log
+                loggerController.Add(" ? Dec exception: " + ex.Message);
             }
             finally
             {

@@ -17,9 +17,10 @@ namespace CryptographyProject
             InitializeComponent();
 
             //Initialize my data
+            LoggerController.listBox = logView;
             mMainController = new MainController();
             mMainController.DataModel.Folders = new Folders();
-            
+
             //Load the settings
             try
             {
@@ -72,7 +73,7 @@ namespace CryptographyProject
             {
                 return;
             }
-            
+
             var selectedItems = listAlgorithms.CheckedIndices;
             if (selectedItems.Count > 0)
             {
@@ -81,12 +82,14 @@ namespace CryptographyProject
             mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
             mMainController.DataModel.AlgorithmName = listAlgorithms.SelectedItem.ToString().ToLower();
 
-            switch(mMainController.DataModel.AlgorithmName)
+            switch (mMainController.DataModel.AlgorithmName)
             {
                 case "simple substitution":
-                    Form f = new SimpleSubstitutionAlphabet();
-                    f.Show();
-                    break;
+                    {
+                        Form f = new SimpleSubstitutionAlphabet();
+                        f.Show();
+                        break;
+                    }
             }
         }
 
@@ -260,7 +263,7 @@ namespace CryptographyProject
             Properties.Settings.Default["ThreadsNumber"] = mMainController.DataModel.ThreadsNumber;
             Properties.Settings.Default.Save();
         }
-        
+
         private void radioEnc_Click(object sender, EventArgs e)
         {
             mMainController.DataModel.EncryptionChosen = true;
@@ -271,6 +274,6 @@ namespace CryptographyProject
             mMainController.DataModel.EncryptionChosen = false;
         }
 
-    
+
     }
 }
