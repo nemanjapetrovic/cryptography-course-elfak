@@ -23,6 +23,7 @@ namespace CryptographyProject.Controller
         //Thread data
         private static int _NUMBER_OF_THREADS; //Number of current threads
         public static bool _isRunning;
+        public static bool _END_OF_PROGRAM_KILL_THREADS;
 
         //HistoryController
         private HistoryController historyController;
@@ -37,7 +38,8 @@ namespace CryptographyProject.Controller
             //Reset
             _NUMBER_OF_THREADS = 0;
             _isRunning = false;
-
+            _END_OF_PROGRAM_KILL_THREADS = false;
+            
             //Starting the logger thread
             new Thread(() => loggerController.PrintLog()).Start();
         }
@@ -54,14 +56,8 @@ namespace CryptographyProject.Controller
         {
             loggerController.Add(" # STARTING THE ENC/DEC");
             LoadedFilesController._isRunning = true;
-            while (true)
-            {
-                if (!LoadedFilesController._isRunning)
-                {
-                    loggerController.Add(" # STOPING THE ENC/DEC");
-                    break;
-                }
-
+            while (LoadedFilesController._isRunning)
+            { 
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
@@ -85,6 +81,7 @@ namespace CryptographyProject.Controller
                 }
                 Thread.Sleep(1000);
             }
+            loggerController.Add(" # STOPING THE ENC/DEC");
         }
 
         //Stops the whole process
@@ -137,6 +134,14 @@ namespace CryptographyProject.Controller
                                 continue;
                             }
                             sw.Write(SimpleSubstituionCipher.Encrypt(character));
+
+                            if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
+                            {
+                                sr.Dispose();
+                                sw.Dispose();
+                                File.Delete(sb.ToString());
+                                Thread.CurrentThread.Abort();
+                            }
                         }
                     }
                 }
@@ -180,6 +185,14 @@ namespace CryptographyProject.Controller
                                 continue;
                             }
                             sw.Write(SimpleSubstituionCipher.Decrypt(character));
+
+                            if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
+                            {
+                                sr.Dispose();
+                                sw.Dispose();
+                                File.Delete(sb.ToString());
+                                Thread.CurrentThread.Abort();
+                            }
                         }
                     }
                 }

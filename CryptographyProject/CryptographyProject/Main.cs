@@ -252,6 +252,8 @@ namespace CryptographyProject
                 LoggerController._THREAD_END = true;
                 //Ending the thread for files
                 LoadedFilesController._isRunning = false;
+                //Ending all file threads
+                LoadedFilesController._END_OF_PROGRAM_KILL_THREADS = true;
 
                 this.SaveSettings();
             }

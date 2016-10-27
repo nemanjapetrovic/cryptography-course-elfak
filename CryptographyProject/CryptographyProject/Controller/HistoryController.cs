@@ -43,6 +43,7 @@ namespace CryptographyProject.Controller
                 Path = path,
                 DateModified = datemodified
             });
+            WriteHistory();
         }
 
         public void WriteHistory()

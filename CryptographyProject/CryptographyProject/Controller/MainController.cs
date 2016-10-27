@@ -47,6 +47,8 @@ namespace CryptographyProject.Controller
                     | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Filter = "*.txt";
             watcher.Changed += new FileSystemEventHandler(OnChanged);
+            watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Renamed += new RenamedEventHandler(OnRenamed);
         }
 
         //Validator
@@ -151,6 +153,22 @@ namespace CryptographyProject.Controller
 
         //Watcher ChangeEvent
         private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            var file = new FileInfo(e.FullPath);
+
+            //Validate if the file is NOT:
+            // - already encrypted using -> FormModel.ENC
+            // - old (file was encrypted before, there is data in the "database" using -> 
+            if (FileNotValid(file))
+            {
+                return;
+            }
+
+            loadedFilesController.Add(file);
+        }
+
+        //Watcher FileRenamed event
+        private void OnRenamed(object source, RenamedEventArgs e)
         {
             var file = new FileInfo(e.FullPath);
 
