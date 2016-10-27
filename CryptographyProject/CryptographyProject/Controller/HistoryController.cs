@@ -22,10 +22,12 @@ namespace CryptographyProject.Controller
             {
                 if (!File.Exists("history.json"))
                 {
+                    historyFiles.Clear();
                     using (File.Create("history.json")) { }
                     return;
                 }
                 File.WriteAllText("history.json", String.Empty);
+                historyFiles.Clear();
             }
             catch (Exception)
             {

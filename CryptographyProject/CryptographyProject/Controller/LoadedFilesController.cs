@@ -22,7 +22,7 @@ namespace CryptographyProject.Controller
 
         //Thread data
         private static int _NUMBER_OF_THREADS; //Number of current threads
-        private static bool _isRunning;
+        public static bool _isRunning;
 
         //HistoryController
         private HistoryController historyController;
@@ -62,7 +62,7 @@ namespace CryptographyProject.Controller
                     break;
                 }
 
-                if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber)
+                if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
 
@@ -83,6 +83,7 @@ namespace CryptographyProject.Controller
                             }
                     }
                 }
+                Thread.Sleep(1000);
             }
         }
 
@@ -101,9 +102,9 @@ namespace CryptographyProject.Controller
                 historyController.AddToHistory(file.Name, file.FullName, file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss"));
             }
             //Threads number
-            LoadedFilesController._NUMBER_OF_THREADS--;
+            LoadedFilesController._NUMBER_OF_THREADS--;            
             //Log
-            loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);
+            loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);            
         }
 
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)

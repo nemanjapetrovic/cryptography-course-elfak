@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -45,6 +46,7 @@ namespace CryptographyProject.Controller
                 {
                     listBox.Invoke(new Action(() => listBox.Items.Add(queueLogs.Take())));
                 }
+                Thread.Sleep(1);
             }
         }
     }

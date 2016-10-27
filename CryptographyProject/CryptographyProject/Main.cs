@@ -248,6 +248,11 @@ namespace CryptographyProject
         {
             try
             {
+                //Ending logger thread
+                LoggerController._THREAD_END = true;
+                //Ending the thread for files
+                LoadedFilesController._isRunning = false;
+
                 this.SaveSettings();
             }
             catch (Exception)
