@@ -25,11 +25,28 @@ namespace CryptographyProject
             txtEncryptionAlphabet.KeyPress += txtEncryptionAlphabet_TextChanged;
         }
 
+        public bool CheckForDuplicates()
+        {
+            char[] myArray = txtEncryptionAlphabet.Text.ToCharArray();
+            char[] newArray = myArray.Distinct().ToArray();
+
+            if (myArray.Length != newArray.Length)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (txtEncryptionAlphabet.Text.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || txtEncryptionAlphabet.Text.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
             {
                 MessageBox.Show("Alphabet is not valid! You need to insert exactly 26 characters!");
+                return;
+            }
+            if (CheckForDuplicates())
+            {
+                MessageBox.Show("There are duplicates in the encryption alphabet! Insert a new one!");
                 return;
             }
 
@@ -52,11 +69,6 @@ namespace CryptographyProject
             }
 
             e.KeyChar = Char.ToUpper(e.KeyChar);
-            if (txtEncryptionAlphabet.Text.Contains(e.KeyChar.ToString().ToUpper()))
-            {
-                MessageBox.Show("You already inserted this character!");
-                txtEncryptionAlphabet.Text.Remove(txtEncryptionAlphabet.Text.Length - 1);
-            }
         }
 
         private void btnLoadFromFile_Click(object sender, EventArgs e)
@@ -76,13 +88,7 @@ namespace CryptographyProject
                                 return;
                             }
 
-                            if (key.Distinct().Count() < SimpleSubstituionCipher.NUMBER_OF_CHARS)
-                            {
-                                MessageBox.Show("You already inserted this character!");
-                                return;
-                            }
-
-                            if(key.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || key.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
+                            if (key.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || key.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
                             {
                                 MessageBox.Show("The key is not valid length!");
                                 return;
