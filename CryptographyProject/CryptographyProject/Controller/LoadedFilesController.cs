@@ -112,12 +112,12 @@ namespace CryptographyProject.Controller
                 //Create full valid path for an output file
                 StringBuilder sb = new StringBuilder();
                 sb.Append(model.Folders.OutputFolder)
-                  .Append("\\")
-                  .Append(FormModel.ENC)
+                  .Append("\\")                  
                   .Append("_")
                   .Append(model.AlgorithmName)
                   .Append("_")
-                  .Append(file.Name);
+                  .Append(file.Name)
+                  .Append(FormModel.ENC);
 
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
                 //Read a file char by char, and encrypt it

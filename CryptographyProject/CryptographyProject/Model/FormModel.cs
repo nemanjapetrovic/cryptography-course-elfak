@@ -13,7 +13,7 @@ namespace CryptographyProject.Model
     {
         //Additional file name
         //This should be placed in resource file
-        public static string ENC = "enc";
+        public static string ENC = ".enc";
 
         //Folders
         private Folders _folders;

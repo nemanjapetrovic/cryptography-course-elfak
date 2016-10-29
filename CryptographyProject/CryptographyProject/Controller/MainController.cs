@@ -109,7 +109,7 @@ namespace CryptographyProject.Controller
         private bool FileNotValid(FileInfo file)
         {
             //Extension validation
-            if (!file.Extension.Equals(".txt"))
+            if (!file.Extension.Equals(".txt") && this.DataModel.EncryptionChosen)
             {
                 return true;
             }
