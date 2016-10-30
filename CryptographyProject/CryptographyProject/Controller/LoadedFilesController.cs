@@ -17,10 +17,10 @@ namespace CryptographyProject.Controller
         //Queue for files
         private BlockingCollection<FileInfo> queueFiles;//Files (Disposable!)
 
-        //Thread data
+        //Threads data
         private static int _NUMBER_OF_THREADS; //Number of current threads
-        public static bool _isRunning;
-        public static bool _END_OF_PROGRAM_KILL_THREADS;
+        public static bool _FILE_CREATOR_THREAD_RUNNING;
+        public static bool _END_OF_FILE_THREADS;
 
         //HistoryController
         private HistoryController historyController;
@@ -34,8 +34,8 @@ namespace CryptographyProject.Controller
 
             //Reset
             _NUMBER_OF_THREADS = 0;
-            _isRunning = false;
-            _END_OF_PROGRAM_KILL_THREADS = false;
+            _FILE_CREATOR_THREAD_RUNNING = false;
+            _END_OF_FILE_THREADS = false;
 
             //Starting the logger thread
             new Thread(() => loggerController.PrintLog()).Start();
@@ -52,8 +52,8 @@ namespace CryptographyProject.Controller
         public void StartEncDec(FormModel model)
         {
             loggerController.Add(" # STARTING THE ENC/DEC");
-            LoadedFilesController._isRunning = true;
-            while (LoadedFilesController._isRunning)
+            LoadedFilesController._FILE_CREATOR_THREAD_RUNNING = true;
+            while (LoadedFilesController._FILE_CREATOR_THREAD_RUNNING)
             {
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
@@ -76,7 +76,7 @@ namespace CryptographyProject.Controller
                             }
                     }
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             loggerController.Add(" # STOPING THE ENC/DEC");
         }
@@ -84,7 +84,10 @@ namespace CryptographyProject.Controller
         //Stops the whole process
         public void StopEncDec()
         {
-            LoadedFilesController._isRunning = false;
+            //Kill main thread for creating file editing threads
+            LoadedFilesController._FILE_CREATOR_THREAD_RUNNING = false;
+            //Kill all threads that are currently working with files
+            LoadedFilesController._END_OF_FILE_THREADS = true;
         }
 
         //Call this as event handler when thread ends   -------
@@ -133,17 +136,18 @@ namespace CryptographyProject.Controller
                                 sw.Write(SimpleSubstituionCipher.Encrypt(character));
                             }
 
-                            if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
+                            if (LoadedFilesController._END_OF_FILE_THREADS)
                             {
-                                sr.Close();
-                                sw.Close();
+                                sr.Dispose();
+                                sw.Dispose();
                                 File.Delete(outputFileName);
                                 Thread.CurrentThread.Abort();
-                            }
+                            }                           
                         }
                     }
                 }
                 threadSuccesfull = true;
+                Thread.Sleep(250);
             }
             catch (Exception ex)
             {
@@ -188,7 +192,7 @@ namespace CryptographyProject.Controller
                                 sw.Write(SimpleSubstituionCipher.Decrypt(character));
                             }
 
-                            if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
+                            if (LoadedFilesController._END_OF_FILE_THREADS)
                             {
                                 sr.Dispose();
                                 sw.Dispose();
@@ -199,6 +203,7 @@ namespace CryptographyProject.Controller
                     }
                 }
                 threadSuccesfull = true;
+                Thread.Sleep(250);
             }
             catch (Exception ex)
             {

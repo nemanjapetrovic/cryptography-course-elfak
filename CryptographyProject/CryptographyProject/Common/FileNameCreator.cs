@@ -45,7 +45,12 @@ namespace CryptographyProject.Common
         public static string CreateFileDecryptedName(string outputFolder, string fileName)
         {
             //From "somefile_algorithmname.enc" extract only name "somefile"
-            string newFileName = Path.GetFileNameWithoutExtension(fileName).Substring(0, fileName.IndexOf("_"));
+            string newFileName = Path.GetFileNameWithoutExtension(fileName);
+
+            if(newFileName.Contains("_"))
+            {
+                newFileName = newFileName.Substring(0, fileName.IndexOf("_"));
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.Append(outputFolder)
