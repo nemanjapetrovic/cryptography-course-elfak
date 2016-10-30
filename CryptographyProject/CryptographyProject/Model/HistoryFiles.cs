@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace CryptographyProject.Model
 {
+    /// <summary>
+    /// History data, used to get the history of the encrypted/decrypted files. 
+    /// Used to check if the file was alredy encrypted/decrypted so we can skip it.
+    /// </summary>
     public class HistoryFiles
-    {
+    {        
         public string FileName { get; set; }
         public string DateModified { get; set; }
         public string Path { get; set; }
-
+        
         public bool Equals(HistoryFiles file)        
         {
             int number = 0;

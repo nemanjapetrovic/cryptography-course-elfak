@@ -9,10 +9,14 @@ using System.Windows.Forms;
 
 namespace CryptographyProject.Controller
 {
+    /// <summary>
+    /// Logging data into a view list box.
+    /// </summary>
     public class LoggerController
     {
         //ThreadLock
-        public static bool _THREAD_END;
+        public static bool _LOG_THREAD_RUNNING;
+
         //Listbox
         public static ListBox listBox;
 
@@ -23,9 +27,10 @@ namespace CryptographyProject.Controller
         public LoggerController()
         {
             queueLogs = new BlockingCollection<string>();
-            _THREAD_END = false;
+            _LOG_THREAD_RUNNING = true;
         }
 
+        //Adding a data to log
         public void Add(string log)
         {
             queueLogs.Add(log);
@@ -34,14 +39,10 @@ namespace CryptographyProject.Controller
         //Work in a thread
         public void PrintLog()
         {
-            _THREAD_END = false;
-            while (true)
+            _LOG_THREAD_RUNNING = true;
+            while (_LOG_THREAD_RUNNING)
             {
-                if (_THREAD_END)
-                {
-                    break;
-                }
-
+                //Add a new data into a listbox             
                 if (queueLogs.Count > 0)
                 {
                     listBox.Invoke(new Action(() => listBox.Items.Add(queueLogs.Take())));

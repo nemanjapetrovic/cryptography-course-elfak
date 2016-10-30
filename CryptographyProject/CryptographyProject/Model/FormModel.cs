@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CryptographyProject.Model
 {
     /// <summary>
-    /// Collecting data from the form controls.
+    /// Collecting data from the form controls, model for the main form view.
     /// </summary>
     public class FormModel
     {

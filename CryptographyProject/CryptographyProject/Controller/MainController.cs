@@ -52,7 +52,7 @@ namespace CryptographyProject.Controller
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
         }
 
-        //Validator
+        //Validator for the data from the model -> view
         public void ValidateData()
         {
             //This is not the right way to do this, we should use ValidationArguments for the properties of the classes
@@ -77,7 +77,7 @@ namespace CryptographyProject.Controller
                 throw new Exception("File watcher is null!");
             }
 
-            //Load the existing files
+            //Load the existing files in a input folder
             this.LoadAllFiles();
 
             //Start the file watcher
@@ -106,7 +106,7 @@ namespace CryptographyProject.Controller
             historyController.WriteHistory();
         }
 
-        //File validator
+        //File validator, imported file
         private bool FileNotValid(FileInfo file)
         {
             //Extension validation
@@ -115,24 +115,25 @@ namespace CryptographyProject.Controller
                 return true;
             }
 
-            //Want encryption and file cotains ENC prefix the name property
+            //Want encryption and the file cotains .enc extension
             if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
             {
                 return true;
             }
 
-            //Want decryption and file does not contain ENC prefix in the name property
+            //Want decryption and the file does not contain .enc extension
             if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
             {
                 return true;
             }
 
-            //File was in database, so we can skip it, this file was encrypted sometime
+            //File was in database (history.json), so we can skip it, this file was encrypted/decrypted sometime
             if (historyController.FileExists(file))
             {
                 return true;
             }
 
+            //File OK
             return false;
         }
 
@@ -152,14 +153,12 @@ namespace CryptographyProject.Controller
             }
         }
 
-        //Watcher ChangeEvent
+        //Watcher OnChange event
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             var file = new FileInfo(e.FullPath);
 
-            //Validate if the file is NOT:
-            // - already encrypted using -> FormModel.ENC
-            // - old (file was encrypted before, there is data in the "database" using -> 
+            //Validate
             if (FileNotValid(file))
             {
                 return;
@@ -173,9 +172,7 @@ namespace CryptographyProject.Controller
         {
             var file = new FileInfo(e.FullPath);
 
-            //Validate if the file is NOT:
-            // - already encrypted using -> FormModel.ENC
-            // - old (file was encrypted before, there is data in the "database" using -> 
+            //Validate
             if (FileNotValid(file))
             {
                 return;
@@ -184,9 +181,16 @@ namespace CryptographyProject.Controller
             loadedFilesController.Add(file);
         }
 
+        //Remove the history data
         public void FlushHistory()
         {
-            historyController.ClearHistory();
+            historyController.FlushHistory();
+        }
+
+        //Write the history data
+        public void WriteHistory()
+        {
+            historyController.WriteHistory();
         }
     }
 }

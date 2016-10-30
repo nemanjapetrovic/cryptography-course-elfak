@@ -8,7 +8,7 @@ using CryptographyProject.Common;
 
 namespace CryptographyProject.Controller
 {
-    public class LoadedFilesController : IEncryptionAlgorithm
+    public class LoadedFilesController : IEncryptionAlgorithms
     {
         //Logger
         private LoggerController loggerController;
@@ -166,7 +166,7 @@ namespace CryptographyProject.Controller
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
 
-                //Read a file char by char, and encrypt it
+                //Read a file char by char, and decrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
                     using (StreamWriter sw = new StreamWriter(outputFileName))

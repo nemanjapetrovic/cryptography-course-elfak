@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Common\FileNameCreator.cs" />
     <Compile Include="Controller\HistoryController.cs" />
-    <Compile Include="Controller\IEncryptionAlgorithm.cs" />
+    <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
     <Compile Include="Model\FormModel.cs" />

@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace CryptographyProject.Common
 {
+    /// <summary>
+    /// Used to create file names when we create an output file.
+    /// </summary>
     public class FileNameCreator
     {
-        //Additional file name        
+        //Encryption extension 
         public const string ENC = ".enc";
 
         /// <summary>

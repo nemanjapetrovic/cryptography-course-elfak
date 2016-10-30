@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CryptographyProject.EncryptionAlgorithms
 {
+    /// <summary>
+    /// Simple substitution cipher algorithm implementation.
+    /// </summary>
     public class SimpleSubstituionCipher
     {
         //Standard data

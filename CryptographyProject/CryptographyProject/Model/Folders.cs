@@ -4,7 +4,7 @@ using System.IO;
 namespace CryptographyProject.Model
 {
     /// <summary>
-    /// Insert in FormModel class.
+    /// Data for the folders from the main form.
     /// </summary>
     public class Folders
     {              

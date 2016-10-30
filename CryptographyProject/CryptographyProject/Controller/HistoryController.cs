@@ -6,9 +6,13 @@ using Newtonsoft.Json;
 
 namespace CryptographyProject.Controller
 {
+    /// <summary>
+    /// History controller contains the instances of history files and operations on those instances.
+    /// History file class is about files that are already encrypted/decrypted.
+    /// </summary>
     public class HistoryController
     {
-        //Files
+        private const string _HISTORY_FILE = "history.json";
         public List<HistoryFiles> historyFiles;
 
         public HistoryController()
@@ -16,25 +20,22 @@ namespace CryptographyProject.Controller
             historyFiles = LoadHistoryFiles();
         }
 
-        public void ClearHistory()
+        //Removes history.json file
+        public void FlushHistory()
         {
-            try
+            //If the file exists - remove it
+            if (!File.Exists(HistoryController._HISTORY_FILE))
             {
-                if (!File.Exists("history.json"))
-                {
-                    historyFiles.Clear();
-                    using (File.Create("history.json")) { }
-                    return;
-                }
-                File.WriteAllText("history.json", String.Empty);
                 historyFiles.Clear();
+                using (File.Create(HistoryController._HISTORY_FILE)) { }
+                return;
             }
-            catch (Exception)
-            {
-
-            }
+            //Fiel does not exsit, just create a new empty one
+            File.WriteAllText(HistoryController._HISTORY_FILE, String.Empty);
+            historyFiles.Clear();
         }
 
+        //Create a new hisotry file object and write it to history.json
         public void AddToHistory(string filename, string path, string datemodified)
         {
             historyFiles.Add(new HistoryFiles()
@@ -43,32 +44,27 @@ namespace CryptographyProject.Controller
                 Path = path,
                 DateModified = datemodified
             });
-            WriteHistory();
         }
 
+        //Writing the history.json file data
         public void WriteHistory()
         {
-            try
+            using (StreamWriter sw = new StreamWriter(HistoryController._HISTORY_FILE))
             {
-                using (StreamWriter sw = new StreamWriter("history.json"))
-                {
-                    string json = JsonConvert.SerializeObject(historyFiles);
-                    sw.Write(json);
-                }
-            }
-            catch (Exception)
-            {
+                string json = JsonConvert.SerializeObject(historyFiles);
+                sw.Write(json);
             }
         }
 
+        //Load the data from the history file
         public List<HistoryFiles> LoadHistoryFiles()
         {
             try
             {
-                using (StreamReader sr = new StreamReader("history.json"))
+                using (StreamReader sr = new StreamReader(HistoryController._HISTORY_FILE))
                 {
                     string json = sr.ReadToEnd();
-                    if(string.IsNullOrEmpty(json))
+                    if (string.IsNullOrEmpty(json))
                     {
                         return new List<HistoryFiles>();
                     }
@@ -77,11 +73,12 @@ namespace CryptographyProject.Controller
             }
             catch (Exception)
             {
-                using (File.Create("history.json")) { }
+                using (File.Create(HistoryController._HISTORY_FILE)) { }
                 return new List<HistoryFiles>(); // probably there is no history.json
             }
         }
 
+        //Check if the file was already encrypted/decrypted and if it's is present in history.json file
         public bool FileExists(FileInfo file)
         {
             var tmp = new HistoryFiles()
@@ -93,7 +90,7 @@ namespace CryptographyProject.Controller
 
             foreach (var item in historyFiles)
             {
-                if(item.Equals(tmp))
+                if (item.Equals(tmp))
                 {
                     return true;
                 }

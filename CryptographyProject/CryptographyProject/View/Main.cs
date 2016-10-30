@@ -248,8 +248,12 @@ namespace CryptographyProject.View
         {
             try
             {
+                //Save the history
+                mMainController.WriteHistory();
+
+                //Threads
                 //Ending logger thread
-                LoggerController._THREAD_END = true;
+                LoggerController._LOG_THREAD_RUNNING = false;
                 //Ending the thread for files
                 LoadedFilesController._isRunning = false;
                 //Ending all file threads
@@ -257,8 +261,9 @@ namespace CryptographyProject.View
 
                 this.SaveSettings();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 this.ResetSettings();
             }
         }
@@ -281,9 +286,17 @@ namespace CryptographyProject.View
             mMainController.DataModel.EncryptionChosen = false;
         }
 
+        //Removing the history
         private void btnHistory_Click(object sender, EventArgs e)
         {
-            mMainController.FlushHistory();
+            try
+            {
+                mMainController.FlushHistory();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
