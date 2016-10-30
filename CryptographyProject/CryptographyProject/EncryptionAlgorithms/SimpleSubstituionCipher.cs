@@ -12,8 +12,8 @@ namespace CryptographyProject.EncryptionAlgorithms
     public class SimpleSubstituionCipher
     {
         //Standard data
-        public const int NUMBER_OF_CHARS = 26;
-        public static char[] StandardAlphabet = new char[NUMBER_OF_CHARS]
+        public const int _NUMBER_OF_CHARS = 26;
+        public static char[] StandardAlphabet = new char[_NUMBER_OF_CHARS]
         {
             'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
         };
@@ -24,7 +24,7 @@ namespace CryptographyProject.EncryptionAlgorithms
         {
             set
             {
-                if (value.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS || value.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS)
+                if (value.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS || value.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS)
                 {
                     throw new Exception("Encryption alphabet chars is not valid length!");
                 }
@@ -38,7 +38,7 @@ namespace CryptographyProject.EncryptionAlgorithms
                     throw new Exception("Encryption alphabet chars is not set!");
                 }
 
-                if (_EncryptionAlphabetChars.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || _EncryptionAlphabetChars.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
+                if (_EncryptionAlphabetChars.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS || _EncryptionAlphabetChars.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS)
                 {
                     throw new Exception("Encryption alphabet chars is not valid length!");
                 }

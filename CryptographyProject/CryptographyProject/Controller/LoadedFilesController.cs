@@ -125,9 +125,12 @@ namespace CryptographyProject.Controller
                             character = Char.ToLower(character);
                             if (character < 97 || character > 122)
                             {
-                                continue;
+                                sw.Write(character);
                             }
-                            sw.Write(SimpleSubstituionCipher.Encrypt(character));
+                            else
+                            {
+                                sw.Write(SimpleSubstituionCipher.Encrypt(character));
+                            }
 
                             if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
                             {
@@ -177,9 +180,12 @@ namespace CryptographyProject.Controller
                             character = Char.ToUpper(character);
                             if (character < 65 || character > 90)
                             {
-                                continue;
+                                sw.Write(character);
                             }
-                            sw.Write(SimpleSubstituionCipher.Decrypt(character));
+                            else
+                            {
+                                sw.Write(SimpleSubstituionCipher.Decrypt(character));
+                            }
 
                             if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
                             {

@@ -25,6 +25,7 @@ namespace CryptographyProject.View
             txtEncryptionAlphabet.KeyPress += txtEncryptionAlphabet_TextChanged;
         }
 
+        //Checking for duplicates in the key
         public bool CheckForDuplicates()
         {
             char[] myArray = txtEncryptionAlphabet.Text.ToCharArray();
@@ -39,11 +40,14 @@ namespace CryptographyProject.View
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (txtEncryptionAlphabet.Text.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || txtEncryptionAlphabet.Text.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
+            //Number of characters error
+            if (txtEncryptionAlphabet.Text.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS || txtEncryptionAlphabet.Text.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS)
             {
                 MessageBox.Show("Alphabet is not valid! You need to insert exactly 26 characters!");
                 return;
             }
+            
+            //Duplicates error
             if (CheckForDuplicates())
             {
                 MessageBox.Show("There are duplicates in the encryption alphabet! Insert a new one!");
@@ -82,13 +86,16 @@ namespace CryptographyProject.View
                         using (StreamReader sr = new StreamReader(openFileDialog.FileName))
                         {
                             string key = sr.ReadLine().ToUpper();
+
+                            //Key must contain only a-z and A-Z chars
                             if (!System.Text.RegularExpressions.Regex.IsMatch(key, @"^[a-zA-Z]+$"))
                             {
                                 MessageBox.Show("This textbox accepts only alphabetical characters!");
                                 return;
                             }
 
-                            if (key.Length < SimpleSubstituionCipher.NUMBER_OF_CHARS || key.Length > SimpleSubstituionCipher.NUMBER_OF_CHARS)
+                            //Key length is not valid
+                            if (key.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS || key.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS)
                             {
                                 MessageBox.Show("The key is not valid length!");
                                 return;
