@@ -13,7 +13,7 @@ namespace CryptographyProject.EncryptionAlgorithms
     {
         //Standard data
         public const int _NUMBER_OF_CHARS = 26;
-        public static char[] StandardAlphabet = new char[_NUMBER_OF_CHARS]
+        public static readonly char[] StandardAlphabet =
         {
             'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
         };

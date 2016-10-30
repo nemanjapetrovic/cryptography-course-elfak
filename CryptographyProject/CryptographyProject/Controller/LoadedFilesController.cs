@@ -5,6 +5,7 @@ using CryptographyProject.Model;
 using System.Threading;
 using CryptographyProject.EncryptionAlgorithms;
 using CryptographyProject.Common;
+using CryptographyProject.View;
 
 namespace CryptographyProject.Controller
 {
@@ -57,11 +58,11 @@ namespace CryptographyProject.Controller
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
-
+                    
                     //Choose algorithm
-                    switch (model.AlgorithmName)
+                    switch (model.AlgorithmIndex)
                     {
-                        case "simple substitution":
+                        case (int)Algorithms.SimpleSubstitution:
                             {
                                 if (model.EncryptionChosen)
                                 {

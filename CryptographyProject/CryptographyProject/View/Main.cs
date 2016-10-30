@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using CryptographyProject.Controller;
 using CryptographyProject.Model;
+using CryptographyProject.EncryptionAlgorithms;
 
 namespace CryptographyProject.View
 {
@@ -82,9 +83,9 @@ namespace CryptographyProject.View
             mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
             mMainController.DataModel.AlgorithmName = listAlgorithms.SelectedItem.ToString().ToLower();
 
-            switch (mMainController.DataModel.AlgorithmName)
+            switch (mMainController.DataModel.AlgorithmIndex)
             {
-                case "simple substitution":
+                case (int)Algorithms.SimpleSubstitution:
                     {
                         Form f = new SimpleSubstitutionAlphabet();
                         f.Show();
