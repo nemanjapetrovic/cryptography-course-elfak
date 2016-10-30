@@ -1,4 +1,4 @@
-﻿namespace CryptographyProject
+﻿namespace CryptographyProject.View
 {
     partial class SimpleSubstitutionAlphabet
     {
@@ -69,7 +69,7 @@
             this.txtEncryptionAlphabet.MaxLength = 26;
             this.txtEncryptionAlphabet.Name = "txtEncryptionAlphabet";
             this.txtEncryptionAlphabet.Size = new System.Drawing.Size(258, 20);
-            this.txtEncryptionAlphabet.TabIndex = 3;            
+            this.txtEncryptionAlphabet.TabIndex = 3;
             // 
             // btnOK
             // 
@@ -107,7 +107,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblStandrad);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.Name = "SimpleSubstitutionAlphabet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

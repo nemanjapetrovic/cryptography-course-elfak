@@ -59,10 +59,10 @@
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
     <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />
-    <Compile Include="Main.cs">
+    <Compile Include="View\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
+    <Compile Include="View\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Controller\LoadedFilesController.cs" />
@@ -70,13 +70,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleSubstitutionAlphabet.cs">
+    <Compile Include="View\SimpleSubstitutionAlphabet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimpleSubstitutionAlphabet.Designer.cs">
+    <Compile Include="View\SimpleSubstitutionAlphabet.Designer.cs">
       <DependentUpon>SimpleSubstitutionAlphabet.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Main.resx">
+    <EmbeddedResource Include="View\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -89,7 +89,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SimpleSubstitutionAlphabet.resx">
+    <EmbeddedResource Include="View\SimpleSubstitutionAlphabet.resx">
       <DependentUpon>SimpleSubstitutionAlphabet.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -110,7 +110,9 @@
     <Content Include="icon.ico" />
     <None Include="Resources\folder.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

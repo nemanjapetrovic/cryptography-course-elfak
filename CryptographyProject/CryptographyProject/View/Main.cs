@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using CryptographyProject.Controller;
 using CryptographyProject.Model;
 
-namespace CryptographyProject
+namespace CryptographyProject.View
 {
     public partial class Main : Form
     {

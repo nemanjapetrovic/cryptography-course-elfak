@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CryptographyProject
+namespace CryptographyProject.View
 {
     public partial class SimpleSubstitutionAlphabet : Form
     {

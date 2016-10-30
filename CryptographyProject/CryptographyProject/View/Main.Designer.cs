@@ -1,4 +1,4 @@
-﻿namespace CryptographyProject
+﻿namespace CryptographyProject.View
 {
     partial class Main
     {
