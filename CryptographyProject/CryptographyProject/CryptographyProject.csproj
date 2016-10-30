@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\FileNameCreator.cs" />
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="Controller\IEncryptionAlgorithm.cs" />
     <Compile Include="Controller\LoggerController.cs" />
@@ -110,9 +111,7 @@
     <Content Include="icon.ico" />
     <None Include="Resources\folder.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

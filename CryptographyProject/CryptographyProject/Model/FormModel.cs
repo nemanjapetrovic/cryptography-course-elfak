@@ -11,10 +11,6 @@ namespace CryptographyProject.Model
     /// </summary>
     public class FormModel
     {
-        //Additional file name
-        //This should be placed in resource file
-        public static string ENC = ".enc";
-
         //Folders
         private Folders _folders;
         public Folders Folders

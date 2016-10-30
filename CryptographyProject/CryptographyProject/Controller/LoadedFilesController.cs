@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Concurrent;
 using CryptographyProject.Model;
 using System.Threading;
 using CryptographyProject.EncryptionAlgorithms;
-using System.Windows.Forms;
+using CryptographyProject.Common;
 
 namespace CryptographyProject.Controller
 {
@@ -39,7 +35,7 @@ namespace CryptographyProject.Controller
             _NUMBER_OF_THREADS = 0;
             _isRunning = false;
             _END_OF_PROGRAM_KILL_THREADS = false;
-            
+
             //Starting the logger thread
             new Thread(() => loggerController.PrintLog()).Start();
         }
@@ -57,7 +53,7 @@ namespace CryptographyProject.Controller
             loggerController.Add(" # STARTING THE ENC/DEC");
             LoadedFilesController._isRunning = true;
             while (LoadedFilesController._isRunning)
-            { 
+            {
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
@@ -99,9 +95,9 @@ namespace CryptographyProject.Controller
                 historyController.AddToHistory(file.Name, file.FullName, file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss"));
             }
             //Threads number
-            LoadedFilesController._NUMBER_OF_THREADS--;            
+            LoadedFilesController._NUMBER_OF_THREADS--;
             //Log
-            loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);            
+            loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);
         }
 
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)
@@ -109,21 +105,19 @@ namespace CryptographyProject.Controller
             bool threadSuccesfull = false;
             try
             {
-                //Create full valid path for an output file
-                StringBuilder sb = new StringBuilder();
-                sb.Append(model.Folders.OutputFolder)
-                  .Append("\\")                  
-                  .Append("_")
-                  .Append(model.AlgorithmName)
-                  .Append("_")
-                  .Append(file.Name)
-                  .Append(FormModel.ENC);
+                //OutputFileName
+                string outputFileName = FileNameCreator.CreateFileEncryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    model.AlgorithmName);
 
+                //Log
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
-                    using (StreamWriter sw = new StreamWriter(sb.ToString()))
+                    using (StreamWriter sw = new StreamWriter(outputFileName))
                     {
                         while (sr.Peek() >= 0)
                         {
@@ -137,9 +131,9 @@ namespace CryptographyProject.Controller
 
                             if (LoadedFilesController._END_OF_PROGRAM_KILL_THREADS)
                             {
-                                sr.Dispose();
-                                sw.Dispose();
-                                File.Delete(sb.ToString());
+                                sr.Close();
+                                sw.Close();
+                                File.Delete(outputFileName);
                                 Thread.CurrentThread.Abort();
                             }
                         }
@@ -164,17 +158,18 @@ namespace CryptographyProject.Controller
             bool threadSuccesfull = false;
             try
             {
-                //Create full valid path for an output file
-                StringBuilder sb = new StringBuilder();
-                sb.Append(model.Folders.OutputFolder)
-                  .Append("\\")
-                  .Append(file.Name.Replace(FormModel.ENC, "").Replace(model.AlgorithmName, "").Replace("_", ""));
+                //OutputFileName
+                string outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name);
 
+                //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
-                    using (StreamWriter sw = new StreamWriter(sb.ToString()))
+                    using (StreamWriter sw = new StreamWriter(outputFileName))
                     {
                         while (sr.Peek() >= 0)
                         {
@@ -190,7 +185,7 @@ namespace CryptographyProject.Controller
                             {
                                 sr.Dispose();
                                 sw.Dispose();
-                                File.Delete(sb.ToString());
+                                File.Delete(outputFileName);
                                 Thread.CurrentThread.Abort();
                             }
                         }

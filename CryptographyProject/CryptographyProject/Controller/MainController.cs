@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using CryptographyProject.Model;
 using System.IO;
 using System.Threading;
+using CryptographyProject.Common;
 
 namespace CryptographyProject.Controller
 {
@@ -115,13 +116,13 @@ namespace CryptographyProject.Controller
             }
 
             //Want encryption and file cotains ENC prefix the name property
-            if (this.DataModel.EncryptionChosen && file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+            if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
             {
                 return true;
             }
 
             //Want decryption and file does not contain ENC prefix in the name property
-            if (!this.DataModel.EncryptionChosen && !file.Name.ToLower().Contains(FormModel.ENC.ToLower()))
+            if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
             {
                 return true;
             }
