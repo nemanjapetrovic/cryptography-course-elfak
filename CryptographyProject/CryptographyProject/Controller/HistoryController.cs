@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using CryptographyProject.Helper;
 
 namespace CryptographyProject.Controller
 {
@@ -12,7 +13,6 @@ namespace CryptographyProject.Controller
     /// </summary>
     public class HistoryController
     {
-        private const string _HISTORY_FILE = "history.json";
         public List<HistoryFiles> historyFiles;
 
         public HistoryController()
@@ -24,14 +24,14 @@ namespace CryptographyProject.Controller
         public void FlushHistory()
         {
             //If the file exists - remove it
-            if (!File.Exists(HistoryController._HISTORY_FILE))
+            if (!File.Exists(Constants.History.HISTORY_FILE))
             {
                 historyFiles.Clear();
-                using (File.Create(HistoryController._HISTORY_FILE)) { }
+                using (File.Create(Constants.History.HISTORY_FILE)) { }
                 return;
             }
             //Fiel does not exsit, just create a new empty one
-            File.WriteAllText(HistoryController._HISTORY_FILE, String.Empty);
+            File.WriteAllText(Constants.History.HISTORY_FILE, String.Empty);
             historyFiles.Clear();
         }
 
@@ -49,7 +49,7 @@ namespace CryptographyProject.Controller
         //Writing the history.json file data
         public void WriteHistory()
         {
-            using (StreamWriter sw = new StreamWriter(HistoryController._HISTORY_FILE))
+            using (StreamWriter sw = new StreamWriter(Constants.History.HISTORY_FILE))
             {
                 string json = JsonConvert.SerializeObject(historyFiles);
                 sw.Write(json);
@@ -61,7 +61,7 @@ namespace CryptographyProject.Controller
         {
             try
             {
-                using (StreamReader sr = new StreamReader(HistoryController._HISTORY_FILE))
+                using (StreamReader sr = new StreamReader(Constants.History.HISTORY_FILE))
                 {
                     string json = sr.ReadToEnd();
                     if (string.IsNullOrEmpty(json))
@@ -73,7 +73,7 @@ namespace CryptographyProject.Controller
             }
             catch (Exception)
             {
-                using (File.Create(HistoryController._HISTORY_FILE)) { }
+                using (File.Create(Constants.History.HISTORY_FILE)) { }
                 return new List<HistoryFiles>(); // probably there is no history.json
             }
         }

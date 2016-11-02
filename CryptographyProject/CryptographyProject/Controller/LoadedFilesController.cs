@@ -104,6 +104,13 @@ namespace CryptographyProject.Controller
             loggerController.Add(" # Threads number: " + LoadedFilesController._NUMBER_OF_THREADS);
         }
 
+
+        //
+        //-----------------------------------------------------------------------------------------------------
+        // Algorithms
+        //-----------------------------------------------------------------------------------------------------
+        //
+
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)
         {
             bool threadSuccesfull = false;
@@ -214,6 +221,16 @@ namespace CryptographyProject.Controller
             {
                 this.ThreadEnds(file, threadSuccesfull);
             }
+        }
+
+        public void RC4Encryption(FileInfo file, FormModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RC4Decryption(FileInfo file, FormModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

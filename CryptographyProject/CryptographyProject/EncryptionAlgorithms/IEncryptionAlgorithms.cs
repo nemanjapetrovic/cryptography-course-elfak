@@ -9,7 +9,8 @@ namespace CryptographyProject.EncryptionAlgorithms
     /// </summary>
     public enum Algorithms
     {
-        SimpleSubstitution = 0
+        SimpleSubstitution = 0,
+        RC4 = 1
     };
 
     /// <summary>
@@ -30,5 +31,19 @@ namespace CryptographyProject.EncryptionAlgorithms
         /// <param name="file"></param>
         /// <param name="model"></param>
         void SimpleSubstitutionDecryption(FileInfo file, FormModel model);
+
+        /// <summary>
+        /// RC4 cipher algorithm, encryption method.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="model"></param>
+        void RC4Encryption(FileInfo file, FormModel model);
+
+        /// <summary>
+        /// RC4 cipher algorithm, decryption method.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="model"></param>
+        void RC4Decryption(FileInfo file, FormModel model);
     }
 }

@@ -13,6 +13,14 @@ namespace CryptographyProject.Helper
             public const string ENC = ".enc";
         }
 
+        internal static class History
+        {
+            public const string HISTORY_FILE = "history.json";
+        }
 
+        internal static class SimpleSubstitutionAlgorithm
+        {
+            public const int NUMBER_OF_CHARS = 26;
+        }
     }
 }
