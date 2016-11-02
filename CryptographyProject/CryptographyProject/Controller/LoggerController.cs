@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptographyProject.Helper;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,14 @@ namespace CryptographyProject.Controller
                 //Add a new data into a listbox             
                 if (queueLogs.Count > 0)
                 {
-                    listBox.Invoke(new Action(() => listBox.Items.Add(queueLogs.Take())));
+                    var item = queueLogs.Take();
+
+                    if (item.Equals(Constants.LogCommands.CLEAR))
+                    {
+                        listBox.Invoke(new Action(() => listBox.Items.Clear()));
+                    }
+
+                    listBox.Invoke(new Action(() => listBox.Items.Add(item)));
                 }
                 Thread.Sleep(1);
             }

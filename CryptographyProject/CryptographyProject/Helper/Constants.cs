@@ -18,6 +18,11 @@ namespace CryptographyProject.Helper
             public const string HISTORY_FILE = "history.json";
         }
 
+        internal static class LogCommands
+        {
+            public const string CLEAR = "clear";
+        }
+
         internal static class SimpleSubstitutionAlgorithm
         {
             public const int NUMBER_OF_CHARS = 26;
