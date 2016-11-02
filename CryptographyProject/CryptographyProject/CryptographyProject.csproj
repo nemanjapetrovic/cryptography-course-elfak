@@ -53,11 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\FileNameCreator.cs" />
+    <Compile Include="Common\FileNameCreatorBIN.cs" />
+    <Compile Include="Common\FileNameCreatorTXT.cs" />
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
+    <Compile Include="Helper\Constants.cs" />
     <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="View\Main.cs">

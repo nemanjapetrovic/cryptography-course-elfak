@@ -58,7 +58,7 @@ namespace CryptographyProject.Controller
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
                     LoadedFilesController._NUMBER_OF_THREADS++;
-                    
+
                     //Choose algorithm
                     switch (model.AlgorithmIndex)
                     {
@@ -110,7 +110,7 @@ namespace CryptographyProject.Controller
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreator.CreateFileEncryptedName(
+                string outputFileName = FileNameCreatorTXT.CreateFileEncryptedName(
                     model.Folders.OutputFolder,
                     file.Name,
                     model.AlgorithmName);
@@ -142,7 +142,7 @@ namespace CryptographyProject.Controller
                                 sw.Dispose();
                                 File.Delete(outputFileName);
                                 Thread.CurrentThread.Abort();
-                            }                           
+                            }
                         }
                     }
                 }
@@ -167,7 +167,7 @@ namespace CryptographyProject.Controller
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreator.CreateFileDecryptedName(
+                string outputFileName = FileNameCreatorTXT.CreateFileDecryptedName(
                     model.Folders.OutputFolder,
                     file.Name);
 

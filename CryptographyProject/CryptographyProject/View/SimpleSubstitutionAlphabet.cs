@@ -46,7 +46,7 @@ namespace CryptographyProject.View
                 MessageBox.Show("Alphabet is not valid! You need to insert exactly 26 characters!");
                 return;
             }
-            
+
             //Duplicates error
             if (CheckForDuplicates())
             {

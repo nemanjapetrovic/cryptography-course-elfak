@@ -7,7 +7,7 @@ namespace CryptographyProject.Model
     /// Data for the folders from the main form.
     /// </summary>
     public class Folders
-    {              
+    {
         private string _inputFolder;
         public string InputFolder
         {

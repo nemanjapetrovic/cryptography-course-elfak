@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptographyProject.Helper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,13 +9,10 @@ using System.Threading.Tasks;
 namespace CryptographyProject.Common
 {
     /// <summary>
-    /// Used to create file names when we create an output file.
+    /// Used to manage .txt file names when we create an output file.
     /// </summary>
-    public class FileNameCreator
+    public class FileNameCreatorTXT
     {
-        //Encryption extension 
-        public const string ENC = ".enc";
-
         /// <summary>
         /// Calling only when we encrypt files. It's only create file with .enc extension. File that is created is NOT binary file.
         /// </summary>
@@ -30,7 +28,7 @@ namespace CryptographyProject.Common
               .Append(Path.GetFileNameWithoutExtension(fileName))
               .Append("_")
               .Append(algorithmName)
-              .Append(FileNameCreator.ENC);
+              .Append(Constants.FileName.ENC);
 
             //C:/Tmp/somefile_algorithmname.enc
             return sb.ToString();
@@ -47,7 +45,7 @@ namespace CryptographyProject.Common
             //From "somefile_algorithmname.enc" extract only name "somefile"
             string newFileName = Path.GetFileNameWithoutExtension(fileName);
 
-            if(newFileName.Contains("_"))
+            if (newFileName.Contains("_"))
             {
                 newFileName = newFileName.Substring(0, fileName.IndexOf("_"));
             }

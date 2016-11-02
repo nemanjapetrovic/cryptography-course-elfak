@@ -8,6 +8,7 @@ using CryptographyProject.Model;
 using System.IO;
 using System.Threading;
 using CryptographyProject.Common;
+using CryptographyProject.Helper;
 
 namespace CryptographyProject.Controller
 {
@@ -116,13 +117,13 @@ namespace CryptographyProject.Controller
             }
 
             //Want encryption and the file cotains .enc extension
-            if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
+            if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(Constants.FileName.ENC))
             {
                 return true;
             }
 
             //Want decryption and the file does not contain .enc extension
-            if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(FileNameCreator.ENC.ToLower()))
+            if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(Constants.FileName.ENC))
             {
                 return true;
             }
