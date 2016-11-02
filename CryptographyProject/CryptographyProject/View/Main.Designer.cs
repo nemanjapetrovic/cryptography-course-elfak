@@ -256,7 +256,8 @@
             this.listAlgorithms.CheckOnClick = true;
             this.listAlgorithms.FormattingEnabled = true;
             this.listAlgorithms.Items.AddRange(new object[] {
-            "Simple substitution"});
+            "Simple substitution",
+            "RC4"});
             this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
             this.listAlgorithms.Name = "listAlgorithms";
             this.listAlgorithms.Size = new System.Drawing.Size(240, 94);

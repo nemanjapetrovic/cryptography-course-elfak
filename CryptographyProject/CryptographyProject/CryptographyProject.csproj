@@ -58,6 +58,7 @@
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />
+    <Compile Include="EncryptionAlgorithms\RC4.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Model\FormModel.cs" />
@@ -73,6 +74,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\RC4Key.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\RC4Key.Designer.cs">
+      <DependentUpon>RC4Key.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\SimpleSubstitutionAlphabet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +99,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\RC4Key.resx">
+      <DependentUpon>RC4Key.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\SimpleSubstitutionAlphabet.resx">
       <DependentUpon>SimpleSubstitutionAlphabet.cs</DependentUpon>
     </EmbeddedResource>

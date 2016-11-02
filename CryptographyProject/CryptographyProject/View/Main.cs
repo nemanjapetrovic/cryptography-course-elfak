@@ -83,11 +83,23 @@ namespace CryptographyProject.View
             mMainController.DataModel.AlgorithmIndex = listAlgorithms.SelectedIndex;
             mMainController.DataModel.AlgorithmName = listAlgorithms.SelectedItem.ToString().ToLower();
 
+            OpenAlgorithmsForms();
+        }
+
+        //Used to open new form if the algorithm have it
+        private void OpenAlgorithmsForms()
+        {
             switch (mMainController.DataModel.AlgorithmIndex)
             {
                 case (int)Algorithms.SimpleSubstitution:
                     {
                         Form f = new SimpleSubstitutionAlphabet();
+                        f.Show();
+                        break;
+                    }
+                case (int)Algorithms.RC4:
+                    {
+                        Form f = new RC4Key();
                         f.Show();
                         break;
                     }

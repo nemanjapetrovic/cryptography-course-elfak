@@ -45,7 +45,7 @@ namespace CryptographyProject.Controller
         public void Add(FileInfo file)
         {
             this.queueFiles.Add(file);
-            loggerController.Add("Added file: " + file.Name);
+            loggerController.Add(" + Added file: " + file.Name);
         }
 
         //Starts the whole process
@@ -71,6 +71,18 @@ namespace CryptographyProject.Controller
                                 else
                                 {
                                     new Thread(() => SimpleSubstitutionDecryption(queueFiles.Take(), model)).Start();
+                                }
+                                break;
+                            }
+                        case (int)Algorithms.RC4:
+                            {
+                                if (model.EncryptionChosen)
+                                {
+                                    new Thread(() => RC4Encryption(queueFiles.Take(), model)).Start();
+                                }
+                                else
+                                {
+                                    new Thread(() => RC4Decryption(queueFiles.Take(), model)).Start();
                                 }
                                 break;
                             }
@@ -225,12 +237,90 @@ namespace CryptographyProject.Controller
 
         public void RC4Encryption(FileInfo file, FormModel model)
         {
-            throw new NotImplementedException();
+            bool threadSuccesfull = false;
+            try
+            {
+                //OutputFileName
+                string outputFileName = "";
+
+                //Log
+                loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Read a file char by char, and encrypt it
+                using (StreamReader sr = new StreamReader(file.FullName))
+                {
+                    using (StreamWriter sw = new StreamWriter(outputFileName))
+                    {
+                        while (sr.Peek() >= 0)
+                        {
+                            //ENC
+
+                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            {
+                                sr.Dispose();
+                                sw.Dispose();
+                                File.Delete(outputFileName);
+                                Thread.CurrentThread.Abort();
+                            }
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Enc exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull);
+            }
         }
 
         public void RC4Decryption(FileInfo file, FormModel model)
         {
-            throw new NotImplementedException();
+            bool threadSuccesfull = false;
+            try
+            {
+                //OutputFileName
+                string outputFileName = "";
+
+                //Log
+                loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Read a file char by char, and decrypt it
+                using (StreamReader sr = new StreamReader(file.FullName))
+                {
+                    using (StreamWriter sw = new StreamWriter(outputFileName))
+                    {
+                        while (sr.Peek() >= 0)
+                        {
+                            //DEC
+
+                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            {
+                                sr.Dispose();
+                                sw.Dispose();
+                                File.Delete(outputFileName);
+                                Thread.CurrentThread.Abort();
+                            }
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Dec exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull);
+            }
         }
     }
 }

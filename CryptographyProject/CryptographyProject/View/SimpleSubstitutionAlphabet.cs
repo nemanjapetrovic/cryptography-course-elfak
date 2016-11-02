@@ -1,4 +1,5 @@
 ﻿using CryptographyProject.EncryptionAlgorithms;
+using CryptographyProject.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,7 +42,8 @@ namespace CryptographyProject.View
         private void btnOK_Click(object sender, EventArgs e)
         {
             //Number of characters error
-            if (txtEncryptionAlphabet.Text.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS || txtEncryptionAlphabet.Text.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS)
+            if (txtEncryptionAlphabet.Text.Length < Constants.SimpleSubstitutionAlgorithm.NUMBER_OF_CHARS ||
+                txtEncryptionAlphabet.Text.Length > Constants.SimpleSubstitutionAlgorithm.NUMBER_OF_CHARS)
             {
                 MessageBox.Show("Alphabet is not valid! You need to insert exactly 26 characters!");
                 return;
@@ -95,7 +97,8 @@ namespace CryptographyProject.View
                             }
 
                             //Key length is not valid
-                            if (key.Length < SimpleSubstituionCipher._NUMBER_OF_CHARS || key.Length > SimpleSubstituionCipher._NUMBER_OF_CHARS)
+                            if (key.Length < Constants.SimpleSubstitutionAlgorithm.NUMBER_OF_CHARS ||
+                                key.Length > Constants.SimpleSubstitutionAlgorithm.NUMBER_OF_CHARS)
                             {
                                 MessageBox.Show("The key is not valid length!");
                                 return;
