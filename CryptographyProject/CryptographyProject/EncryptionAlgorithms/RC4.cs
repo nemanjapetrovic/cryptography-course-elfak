@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptographyProject.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,14 +28,48 @@ namespace CryptographyProject.EncryptionAlgorithms
             }
         }
 
-        public static byte[] Encrypt()
+        public static byte[] KSA()
         {
-            return null;
+            byte tmp;
+            byte[] state = new byte[Constants.RC4Algorithm.LENGTH];
+
+            for (int i = 0; i < Constants.RC4Algorithm.LENGTH; i++)
+            {
+                state[i] = Convert.ToByte(i);
+            }
+
+            int j = 0;
+
+            for (int i = 0; i < Constants.RC4Algorithm.LENGTH; i++)
+            {
+                j = (j + state[i] + Key[i % Key.Length]) % Constants.RC4Algorithm.LENGTH;
+                tmp = state[i];
+                state[i] = state[j];
+                state[j] = tmp;
+            }
+
+            return state;
         }
 
-        public static byte[] Decrypt()
+        public static byte PRGA(ref int i, ref int j, ref byte[] state)
         {
-            return null;
+            i = (i + 1) % Constants.RC4Algorithm.LENGTH;
+            j = (j + state[i]) % Constants.RC4Algorithm.LENGTH;
+            var tmp = state[i];
+            state[i] = state[j];
+            state[j] = tmp;
+            int index = ((state[i] + state[j]) % Constants.RC4Algorithm.LENGTH);
+            return state[index];
+        }
+
+        public static byte Encrypt(byte input, byte state)
+        {
+            return (byte)(input ^ state);
+        }
+
+        public static byte Decrypt(byte input, byte state)
+        {
+            return (byte)(input ^ state);
         }
     }
 }
