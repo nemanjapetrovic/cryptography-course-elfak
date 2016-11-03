@@ -62,14 +62,14 @@ namespace CryptographyProject.EncryptionAlgorithms
             return state[index];
         }
 
-        public static byte Encrypt(byte input, byte state)
+        public static byte Encrypt(byte input, byte prga)
         {
-            return (byte)(input ^ state);
+            return (byte)(input ^ prga);
         }
 
-        public static byte Decrypt(byte input, byte state)
+        public static byte Decrypt(byte input, byte prga)
         {
-            return (byte)(input ^ state);
+            return (byte)(input ^ prga);
         }
     }
 }

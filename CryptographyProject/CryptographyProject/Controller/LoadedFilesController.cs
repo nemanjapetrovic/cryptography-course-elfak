@@ -6,6 +6,7 @@ using System.Threading;
 using CryptographyProject.EncryptionAlgorithms;
 using CryptographyProject.Common;
 using CryptographyProject.View;
+using System.Text;
 
 namespace CryptographyProject.Controller
 {
@@ -241,26 +242,45 @@ namespace CryptographyProject.Controller
             try
             {
                 //OutputFileName
-                string outputFileName = "";
+                string outputFileName = FileNameCreatorBIN.CreateFileEncryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    model.AlgorithmName);
 
                 //Log
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
 
                 //Read a file char by char, and encrypt it
-                using (StreamReader sr = new StreamReader(file.FullName))
+                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
                 {
-                    using (StreamWriter sw = new StreamWriter(outputFileName))
+                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
                     {
-                        while (sr.Peek() >= 0)
+                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
                         {
-                            //ENC
-
-                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                             {
-                                sr.Dispose();
-                                sw.Dispose();
-                                File.Delete(outputFileName);
-                                Thread.CurrentThread.Abort();
+                                int i = 0;
+                                int j = 0;
+                                byte[] state = RC4.KSA();
+                                byte readedValue = 0;
+                                while (br.BaseStream.Position < br.BaseStream.Length)
+                                {
+                                    //ENC
+                                    readedValue = br.ReadByte();
+                                    byte prga = RC4.PRGA(ref i, ref j, ref state);
+                                    byte encryptedValue = RC4.Encrypt(readedValue, prga);
+                                    bw.Write(encryptedValue);
+
+                                    if (LoadedFilesController._END_OF_FILE_THREADS)
+                                    {
+                                        bw.Dispose();
+                                        fsw.Dispose();
+                                        br.Dispose();
+                                        fsr.Dispose();
+                                        File.Delete(outputFileName);
+                                        Thread.CurrentThread.Abort();
+                                    }
+                                }
                             }
                         }
                     }
@@ -285,26 +305,44 @@ namespace CryptographyProject.Controller
             try
             {
                 //OutputFileName
-                string outputFileName = "";
+                string outputFileName = FileNameCreatorBIN.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name, ".mp3");
 
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
 
                 //Read a file char by char, and decrypt it
-                using (StreamReader sr = new StreamReader(file.FullName))
+                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
                 {
-                    using (StreamWriter sw = new StreamWriter(outputFileName))
+                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
                     {
-                        while (sr.Peek() >= 0)
+                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
                         {
-                            //DEC
-
-                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                             {
-                                sr.Dispose();
-                                sw.Dispose();
-                                File.Delete(outputFileName);
-                                Thread.CurrentThread.Abort();
+                                int i = 0;
+                                int j = 0;
+                                byte[] state = RC4.KSA();
+                                byte readedValue = 0;
+                                while (br.BaseStream.Position < br.BaseStream.Length)
+                                {
+                                    //ENC
+                                    readedValue = br.ReadByte();
+                                    byte prga = RC4.PRGA(ref i, ref j, ref state);
+                                    byte decryptedValue = RC4.Decrypt(readedValue, prga);
+                                    bw.Write(decryptedValue);
+
+                                    if (LoadedFilesController._END_OF_FILE_THREADS)
+                                    {
+                                        bw.Dispose();
+                                        fsw.Dispose();
+                                        br.Dispose();
+                                        fsr.Dispose();
+                                        File.Delete(outputFileName);
+                                        Thread.CurrentThread.Abort();
+                                    }
+                                }
                             }
                         }
                     }

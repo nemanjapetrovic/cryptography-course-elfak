@@ -54,7 +54,7 @@ namespace CryptographyProject.Common
             sb.Append(outputFolder)
               .Append("\\")
               .Append(newFileName)
-              .Append(fileExtension);
+              .Append(".mp3");
 
             // ..\somefile.someextension
             return sb.ToString();

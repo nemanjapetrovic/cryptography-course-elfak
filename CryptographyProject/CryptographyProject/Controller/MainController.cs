@@ -67,7 +67,9 @@ namespace CryptographyProject.Controller
             var outputFolder = this.DataModel.Folders.OutputFolder;
 
             //Encryption alphabet
-            var encryptionAlphabet = EncryptionAlgorithms.SimpleSubstituionCipher.EncryptionAlphabetChars;
+            //FIX THIS
+            //if (this.DataModel.AlgorithmIndex == 0)
+            //  char[] encryptionAlphabet = EncryptionAlgorithms.SimpleSubstituionCipher.EncryptionAlphabetChars;
         }
 
         //Starting the watcher and the main functionality
@@ -111,10 +113,10 @@ namespace CryptographyProject.Controller
         private bool FileNotValid(FileInfo file)
         {
             //Extension validation
-            if (!file.Extension.Equals(".txt") && this.DataModel.EncryptionChosen)
-            {
-                return true;
-            }
+            //  if (!file.Extension.Equals(".txt") && this.DataModel.EncryptionChosen)
+            //   {
+            //       return true;
+            //   }
 
             //Want encryption and the file cotains .enc extension
             if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(Constants.FileName.ENC))
