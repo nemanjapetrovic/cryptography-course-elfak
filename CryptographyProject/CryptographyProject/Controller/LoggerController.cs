@@ -51,6 +51,7 @@ namespace CryptographyProject.Controller
                     if (item.Equals(Constants.LogCommands.CLEAR))
                     {
                         listBox.Invoke(new Action(() => listBox.Items.Clear()));
+                        continue;
                     }
 
                     listBox.Invoke(new Action(() => listBox.Items.Add(item)));

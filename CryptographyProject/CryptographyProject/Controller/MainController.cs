@@ -10,6 +10,7 @@ using System.Threading;
 using CryptographyProject.Common;
 using CryptographyProject.Helper;
 using CryptographyProject.View;
+using CryptographyProject.EncryptionAlgorithms;
 
 namespace CryptographyProject.Controller
 {
@@ -67,9 +68,18 @@ namespace CryptographyProject.Controller
             var outputFolder = this.DataModel.Folders.OutputFolder;
 
             //Encryption alphabet
-            //FIX THIS
-            //if (this.DataModel.AlgorithmIndex == 0)
-            //  char[] encryptionAlphabet = EncryptionAlgorithms.SimpleSubstituionCipher.EncryptionAlphabetChars;
+            if (this.DataModel.AlgorithmName.ToLower().Equals(Algorithms.SimpleSubstitution.ToString().ToLower()))
+            {
+                char[] encryptionAlphabet = EncryptionAlgorithms.SimpleSubstituionCipher.EncryptionAlphabetChars;
+            }
+
+            if (this.DataModel.AlgorithmName.ToLower().Equals(Algorithms.RC4.ToString().ToLower()))
+            {
+                if (RC4.Key == null || RC4.Key.Length < 5)
+                {
+                    throw new Exception("RC4 key not valid!");
+                }
+            }
         }
 
         //Starting the watcher and the main functionality
@@ -87,10 +97,8 @@ namespace CryptographyProject.Controller
             watcher.Path = this.DataModel.Folders.InputFolder;
             watcher.EnableRaisingEvents = true;
 
-
-
-            //Reset data
-            LoadedFilesController._END_OF_FILE_THREADS = false;
+            //Reset data for the threads which are used for files enc/dec
+            LoadedFilesController._END_OF_ENC_DEC_THREADS = false;
 
             //Start the LoadedFilesControllerProcesses
             new Thread(() => loadedFilesController.StartEncDec(this.DataModel)).Start();
@@ -117,11 +125,11 @@ namespace CryptographyProject.Controller
         //File validator, imported file
         private bool FileNotValid(FileInfo file)
         {
-            //Extension validation
-            //  if (!file.Extension.Equals(".txt") && this.DataModel.EncryptionChosen)
-            //   {
-            //       return true;
-            //   }
+            //Check again file exists
+            if (!File.Exists(file.FullName))
+            {
+                return true;
+            }
 
             //Want encryption and the file cotains .enc extension
             if (this.DataModel.EncryptionChosen && file.Extension.ToLower().Contains(Constants.FileName.ENC))

@@ -20,8 +20,8 @@ namespace CryptographyProject.Controller
 
         //Threads data
         private static int _NUMBER_OF_THREADS; //Number of current threads
-        public static bool _FILE_CREATOR_THREAD_RUNNING;
-        public static bool _END_OF_FILE_THREADS;
+        public static bool _THREAD_CREATOR_RUNNING;
+        public static bool _END_OF_ENC_DEC_THREADS;
 
         //HistoryController
         private HistoryController historyController;
@@ -35,8 +35,8 @@ namespace CryptographyProject.Controller
 
             //Reset
             _NUMBER_OF_THREADS = 0;
-            _FILE_CREATOR_THREAD_RUNNING = false;
-            _END_OF_FILE_THREADS = false;
+            _THREAD_CREATOR_RUNNING = false;
+            _END_OF_ENC_DEC_THREADS = false;
 
             //Starting the logger thread
             new Thread(() => loggerController.PrintLog()).Start();
@@ -53,8 +53,8 @@ namespace CryptographyProject.Controller
         public void StartEncDec(FormModel model)
         {
             loggerController.Add(" # STARTING THE ENC/DEC");
-            LoadedFilesController._FILE_CREATOR_THREAD_RUNNING = true;
-            while (LoadedFilesController._FILE_CREATOR_THREAD_RUNNING)
+            LoadedFilesController._THREAD_CREATOR_RUNNING = true;
+            while (LoadedFilesController._THREAD_CREATOR_RUNNING)
             {
                 if (LoadedFilesController._NUMBER_OF_THREADS < model.ThreadsNumber && queueFiles.Count > 0)
                 {
@@ -98,9 +98,9 @@ namespace CryptographyProject.Controller
         public void StopEncDec()
         {
             //Kill main thread for creating file editing threads
-            LoadedFilesController._FILE_CREATOR_THREAD_RUNNING = false;
+            LoadedFilesController._THREAD_CREATOR_RUNNING = false;
             //Kill all threads that are currently working with files
-            LoadedFilesController._END_OF_FILE_THREADS = true;
+            LoadedFilesController._END_OF_ENC_DEC_THREADS = true;
         }
 
         //Call this as event handler when thread ends   -------
@@ -162,7 +162,7 @@ namespace CryptographyProject.Controller
                                 sw.Write(SimpleSubstituionCipher.Encrypt(character));
                             }
 
-                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                             {
                                 sr.Dispose();
                                 sw.Dispose();
@@ -221,7 +221,7 @@ namespace CryptographyProject.Controller
                                 sw.Write(SimpleSubstituionCipher.Decrypt(character));
                             }
 
-                            if (LoadedFilesController._END_OF_FILE_THREADS)
+                            if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                             {
                                 sr.Dispose();
                                 sw.Dispose();
@@ -282,7 +282,7 @@ namespace CryptographyProject.Controller
                                     byte encryptedValue = RC4.Encrypt(readedValue, prga);
                                     bw.Write(encryptedValue);
 
-                                    if (LoadedFilesController._END_OF_FILE_THREADS)
+                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                                     {
                                         bw.Dispose();
                                         fsw.Dispose();
@@ -355,7 +355,7 @@ namespace CryptographyProject.Controller
                                     byte decryptedValue = RC4.Decrypt(readedValue, prga);
                                     bw.Write(decryptedValue);
 
-                                    if (LoadedFilesController._END_OF_FILE_THREADS)
+                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                                     {
                                         bw.Dispose();
                                         fsw.Dispose();

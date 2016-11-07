@@ -268,9 +268,9 @@ namespace CryptographyProject.View
                 //Ending logger thread
                 LoggerController._LOG_THREAD_RUNNING = false;
                 //Ending the thread for files
-                LoadedFilesController._FILE_CREATOR_THREAD_RUNNING = false;
+                LoadedFilesController._THREAD_CREATOR_RUNNING = false;
                 //Ending all file threads
-                LoadedFilesController._END_OF_FILE_THREADS = true;
+                LoadedFilesController._END_OF_ENC_DEC_THREADS = true;
 
                 this.SaveSettings();
             }
