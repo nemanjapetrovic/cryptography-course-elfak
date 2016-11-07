@@ -19,7 +19,7 @@ namespace CryptographyProject.View
 
             //Initialize my data
             LoggerController.listBox = logView;
-            mMainController = new MainController();
+            mMainController = new MainController(this);
             mMainController.DataModel.Folders = new Folders();
 
             //Load the settings

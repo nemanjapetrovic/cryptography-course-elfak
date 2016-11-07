@@ -104,11 +104,15 @@ namespace CryptographyProject.Controller
         }
 
         //Call this as event handler when thread ends   -------
-        private void ThreadEnds(FileInfo file, bool threadSuccesfull)
+        private void ThreadEnds(FileInfo file, bool threadSuccesfull, DateTime timeStarted)
         {
             //History
             if (threadSuccesfull)
             {
+                if (timeStarted != null)
+                {
+                    loggerController.Add("Finished: " + DateTime.Now.ToString("dd/MM/yy HH:mm:ss"));
+                }
                 historyController.AddToHistory(file.Name, file.FullName, file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss"));
             }
             //Threads number
@@ -127,16 +131,18 @@ namespace CryptographyProject.Controller
         public void SimpleSubstitutionEncryption(FileInfo file, FormModel model)
         {
             bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreatorTXT.CreateFileEncryptedName(
+                string outputFileName = FileNameCreator.CreateFileEncryptedName(
                     model.Folders.OutputFolder,
                     file.Name,
                     model.AlgorithmName);
 
-                //Log
+                //Log                
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
@@ -176,7 +182,7 @@ namespace CryptographyProject.Controller
             }
             finally
             {
-                this.ThreadEnds(file, threadSuccesfull);
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
             }
 
         }
@@ -184,15 +190,18 @@ namespace CryptographyProject.Controller
         public void SimpleSubstitutionDecryption(FileInfo file, FormModel model)
         {
             bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreatorTXT.CreateFileDecryptedName(
+                string outputFileName = FileNameCreator.CreateFileDecryptedName(
                     model.Folders.OutputFolder,
-                    file.Name);
+                    file.Name,
+                    "");
 
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and decrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
@@ -232,23 +241,25 @@ namespace CryptographyProject.Controller
             }
             finally
             {
-                this.ThreadEnds(file, threadSuccesfull);
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
             }
         }
 
         public void RC4Encryption(FileInfo file, FormModel model)
         {
             bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreatorBIN.CreateFileEncryptedName(
+                string outputFileName = FileNameCreator.CreateFileEncryptedName(
                     model.Folders.OutputFolder,
                     file.Name,
                     model.AlgorithmName);
 
                 //Log
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and encrypt it
                 using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
@@ -295,22 +306,33 @@ namespace CryptographyProject.Controller
             }
             finally
             {
-                this.ThreadEnds(file, threadSuccesfull);
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
             }
         }
 
         public void RC4Decryption(FileInfo file, FormModel model)
         {
             bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
             try
             {
+                //Used to find file extension
+                var historyFile = new HistoryFiles()
+                {
+                    FileName = file.Name,
+                    Path = file.FullName,
+                    DateModified = file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss")
+                };
+
                 //OutputFileName
-                string outputFileName = FileNameCreatorBIN.CreateFileDecryptedName(
+                string outputFileName = FileNameCreator.CreateFileDecryptedName(
                     model.Folders.OutputFolder,
-                    file.Name, ".mp3");
+                    file.Name,
+                    historyController.GetFileExtension(historyFile));
 
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and decrypt it
                 using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
@@ -357,7 +379,7 @@ namespace CryptographyProject.Controller
             }
             finally
             {
-                this.ThreadEnds(file, threadSuccesfull);
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
             }
         }
     }

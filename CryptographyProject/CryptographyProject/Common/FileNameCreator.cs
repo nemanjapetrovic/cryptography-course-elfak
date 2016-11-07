@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace CryptographyProject.Common
 {
     /// <summary>
-    /// Used to manage .txt file names when we create an output file.
+    /// Used to manage file names for output files
     /// </summary>
-    public class FileNameCreatorTXT
+    public class FileNameCreator
     {
         /// <summary>
-        /// Calling only when we encrypt files. It's only create file with .enc extension. File that is created is NOT binary file.
+        /// Calling only when we encrypt files. It's only create file with .enc extension.        
         /// </summary>
         /// <param name="outputFolder"></param>
         /// <param name="fileName"></param>
@@ -30,21 +30,20 @@ namespace CryptographyProject.Common
               .Append(algorithmName)
               .Append(Constants.FileName.ENC);
 
-            //C:/Tmp/somefile_algorithmname.enc
+            // ..\filename_algorithmname.enc
             return sb.ToString();
         }
 
         /// <summary>
-        /// Calling only when we decrypt files. It's creating a .txt file name.
+        /// Calling only when we decrypt files. It's creating file with passed file extension.
         /// </summary>
         /// <param name="outputFolder"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string CreateFileDecryptedName(string outputFolder, string fileName)
+        public static string CreateFileDecryptedName(string outputFolder, string fileName, string extension)
         {
             //From "somefile_algorithmname.enc" extract only name "somefile"
             string newFileName = Path.GetFileNameWithoutExtension(fileName);
-
             if (newFileName.Contains("_"))
             {
                 newFileName = newFileName.Substring(0, fileName.IndexOf("_"));
@@ -54,9 +53,9 @@ namespace CryptographyProject.Common
             sb.Append(outputFolder)
               .Append("\\")
               .Append(newFileName)
-              .Append(".txt");
+              .Append(extension);
 
-            //C:/Tmp/somefile.txt
+            // ..\somefile.extension
             return sb.ToString();
         }
     }

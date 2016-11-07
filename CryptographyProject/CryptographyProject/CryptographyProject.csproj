@@ -53,8 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\FileNameCreatorBIN.cs" />
-    <Compile Include="Common\FileNameCreatorTXT.cs" />
+    <Compile Include="Common\FileNameCreator.cs" />
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />

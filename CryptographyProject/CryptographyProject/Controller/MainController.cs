@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading;
 using CryptographyProject.Common;
 using CryptographyProject.Helper;
+using CryptographyProject.View;
 
 namespace CryptographyProject.Controller
 {
@@ -32,22 +33,21 @@ namespace CryptographyProject.Controller
         private LoadedFilesController loadedFilesController;
 
         //FileWatcher
-        private FileSystemWatcher watcher;
+        private FileSystemWatcher watcher = new FileSystemWatcher();
 
         //HistroyData
         private HistoryController historyController;
 
         //Constructor
-        public MainController()
+        public MainController(Main forma)
         {
             historyController = new HistoryController();
             loadedFilesController = new LoadedFilesController(historyController);
 
             //Watcher
-            watcher = new FileSystemWatcher();
-            watcher.NotifyFilter = NotifyFilters.LastWrite
-                    | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            watcher.Filter = "*.txt";
+            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess
+                    | NotifyFilters.FileName;
+            watcher.Filter = "*.*";
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
@@ -86,6 +86,11 @@ namespace CryptographyProject.Controller
             //Start the file watcher
             watcher.Path = this.DataModel.Folders.InputFolder;
             watcher.EnableRaisingEvents = true;
+
+
+
+            //Reset data
+            LoadedFilesController._END_OF_FILE_THREADS = false;
 
             //Start the LoadedFilesControllerProcesses
             new Thread(() => loadedFilesController.StartEncDec(this.DataModel)).Start();
@@ -157,7 +162,7 @@ namespace CryptographyProject.Controller
         }
 
         //Watcher OnChange event
-        private void OnChanged(object source, FileSystemEventArgs e)
+        void OnChanged(object source, FileSystemEventArgs e)
         {
             var file = new FileInfo(e.FullPath);
 
@@ -171,7 +176,7 @@ namespace CryptographyProject.Controller
         }
 
         //Watcher FileRenamed event
-        private void OnRenamed(object source, RenamedEventArgs e)
+        void OnRenamed(object source, RenamedEventArgs e)
         {
             var file = new FileInfo(e.FullPath);
 

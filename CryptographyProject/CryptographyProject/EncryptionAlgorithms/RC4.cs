@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace CryptographyProject.EncryptionAlgorithms
 {
+    /// <summary>
+    /// RC4 algorithm implementation using KSA and PRGA algorithms.
+    /// </summary>
     public class RC4
     {
         //Loaded Key
@@ -28,6 +31,10 @@ namespace CryptographyProject.EncryptionAlgorithms
             }
         }
 
+        /// <summary>
+        /// KSA - key scheduling algorithm
+        /// </summary>
+        /// <returns></returns>
         public static byte[] KSA()
         {
             byte tmp;
@@ -51,6 +58,13 @@ namespace CryptographyProject.EncryptionAlgorithms
             return state;
         }
 
+        /// <summary>
+        /// PRGA - pseudo random generator algorithm
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public static byte PRGA(ref int i, ref int j, ref byte[] state)
         {
             i = (i + 1) % Constants.RC4Algorithm.LENGTH;
@@ -62,11 +76,23 @@ namespace CryptographyProject.EncryptionAlgorithms
             return state[index];
         }
 
+        /// <summary>
+        /// Encryption -> normalValue XOR prga
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="prga"></param>
+        /// <returns></returns>
         public static byte Encrypt(byte input, byte prga)
         {
             return (byte)(input ^ prga);
         }
 
+        /// <summary>
+        /// Decryption -> encryptedValue XOR prga
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="prga"></param>
+        /// <returns></returns>
         public static byte Decrypt(byte input, byte prga)
         {
             return (byte)(input ^ prga);

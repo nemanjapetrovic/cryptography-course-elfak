@@ -25,12 +25,13 @@ namespace CryptographyProject.Helper
 
         internal static class SimpleSubstitutionAlgorithm
         {
+            //Maximum length of the encoding alphabet
             public const int NUMBER_OF_CHARS = 26;
         }
 
         internal static class RC4Algorithm
         {
-            //One byte = 8bits => 2^8
+            //One byte => 8bits => 2^8
             public const int LENGTH = 256;
         }
     }
