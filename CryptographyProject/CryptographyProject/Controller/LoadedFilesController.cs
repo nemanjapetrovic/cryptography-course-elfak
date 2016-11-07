@@ -111,7 +111,8 @@ namespace CryptographyProject.Controller
             {
                 if (timeStarted != null)
                 {
-                    loggerController.Add("Finished: " + DateTime.Now.ToString("dd/MM/yy HH:mm:ss"));
+                    TimeSpan span = DateTime.Now.Subtract(timeStarted);
+                    loggerController.Add("Finished: " + file.Name + " , time: " + span);
                 }
                 historyController.AddToHistory(file.Name, file.FullName, file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss"));
             }
@@ -142,13 +143,22 @@ namespace CryptographyProject.Controller
 
                 //Log                
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
-                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and encrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
                     using (StreamWriter sw = new StreamWriter(outputFileName))
                     {
+                        //Writing the extension                                
+                        char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
+                        char extensionLength = (char)extension.Length;
+                        sw.Write(extensionLength);
+                        for (var k = 0; k < extension.Length; k++)
+                        {
+                            sw.Write(extension[k]);
+                        }
+
+                        //Reading - encrypting - saving data
                         while (sr.Peek() >= 0)
                         {
                             char character = (char)sr.Read();
@@ -184,7 +194,6 @@ namespace CryptographyProject.Controller
             {
                 this.ThreadEnds(file, threadSuccesfull, timeStarted);
             }
-
         }
 
         public void SimpleSubstitutionDecryption(FileInfo file, FormModel model)
@@ -194,18 +203,29 @@ namespace CryptographyProject.Controller
             try
             {
                 //OutputFileName
-                string outputFileName = FileNameCreator.CreateFileDecryptedName(
-                    model.Folders.OutputFolder,
-                    file.Name,
-                    "");
+                string outputFileName = "";
 
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
-                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and decrypt it
                 using (StreamReader sr = new StreamReader(file.FullName))
                 {
+                    //Reading the extension                                          
+                    var extensionLength = (int)sr.Read();
+                    char[] extension = new char[extensionLength];
+                    for (var i = 0; i < extensionLength; i++)
+                    {
+                        extension[i] = (char)sr.Read();
+                    }
+                    var finalExtesnion = "." + new string(extension);
+
+                    //Output file name
+                    outputFileName = FileNameCreator.CreateFileDecryptedName(
+                            model.Folders.OutputFolder,
+                            file.Name,
+                            finalExtesnion);
+
                     using (StreamWriter sw = new StreamWriter(outputFileName))
                     {
                         while (sr.Peek() >= 0)
@@ -259,7 +279,6 @@ namespace CryptographyProject.Controller
 
                 //Log
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
-                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and encrypt it
                 using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
@@ -270,16 +289,26 @@ namespace CryptographyProject.Controller
                         {
                             using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                             {
+                                //Writing the extension                                
+                                char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
+                                char extensionLength = (char)extension.Length;
+                                bw.Write(extensionLength);
+                                for (var k = 0; k < extension.Length; k++)
+                                {
+                                    bw.Write(extension[k]);
+                                }
+
+                                //Reading and encrypting files
                                 int i = 0;
                                 int j = 0;
                                 byte[] state = RC4.KSA();
-                                byte readedValue = 0;
+                                byte inputValue = 0;
                                 while (br.BaseStream.Position < br.BaseStream.Length)
                                 {
                                     //ENC
-                                    readedValue = br.ReadByte();
+                                    inputValue = br.ReadByte();
                                     byte prga = RC4.PRGA(ref i, ref j, ref state);
-                                    byte encryptedValue = RC4.Encrypt(readedValue, prga);
+                                    byte encryptedValue = RC4.Encrypt(inputValue, prga);
                                     bw.Write(encryptedValue);
 
                                     if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
@@ -316,29 +345,32 @@ namespace CryptographyProject.Controller
             var timeStarted = DateTime.Now;
             try
             {
-                //Used to find file extension
-                var historyFile = new HistoryFiles()
-                {
-                    FileName = file.Name,
-                    Path = file.FullName,
-                    DateModified = file.LastWriteTime.ToString("dd/MM/yy HH:mm:ss")
-                };
-
                 //OutputFileName
-                string outputFileName = FileNameCreator.CreateFileDecryptedName(
-                    model.Folders.OutputFolder,
-                    file.Name,
-                    historyController.GetFileExtension(historyFile));
+                string outputFileName = "";
 
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
-                loggerController.Add("Started: " + timeStarted.ToString("dd/MM/yy HH:mm:ss"));
 
                 //Read a file char by char, and decrypt it
                 using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
                 {
                     using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
                     {
+                        //Reading the extension                        
+                        var extensionLength = (int)br.ReadByte();
+                        char[] extension = new char[extensionLength];
+                        for (var i = 0; i < extensionLength; i++)
+                        {
+                            extension[i] = (char)br.ReadByte();
+                        }
+                        var finalExtesnion = "." + new string(extension);
+
+                        //OutputFileName
+                        outputFileName = FileNameCreator.CreateFileDecryptedName(
+                            model.Folders.OutputFolder,
+                            file.Name,
+                            finalExtesnion);
+
                         using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
                         {
                             using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))

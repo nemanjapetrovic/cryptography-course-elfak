@@ -15,9 +15,13 @@ namespace CryptographyProject.View
 {
     public partial class SimpleSubstitutionAlphabet : Form
     {
-        public SimpleSubstitutionAlphabet()
+        private Main mainForm;
+        private bool buttonOkPressed = false;
+
+        public SimpleSubstitutionAlphabet(Main mainForm)
         {
             InitializeComponent();
+            this.mainForm = mainForm;
         }
 
         private void SimpleSubstitutionAlphabet_Load(object sender, EventArgs e)
@@ -57,6 +61,7 @@ namespace CryptographyProject.View
             }
 
             SimpleSubstituionCipher.EncryptionAlphabetChars = txtEncryptionAlphabet.Text.ToCharArray();
+            buttonOkPressed = true;
             this.Close();
         }
 
@@ -114,6 +119,12 @@ namespace CryptographyProject.View
             }
         }
 
-
+        private void SimpleSubstitutionAlphabet_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!buttonOkPressed)
+            {
+                this.mainForm.ClearAlgorithmsViewData();
+            }
+        }
     }
 }

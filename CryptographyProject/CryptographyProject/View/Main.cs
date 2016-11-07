@@ -86,6 +86,16 @@ namespace CryptographyProject.View
             OpenAlgorithmsForms();
         }
 
+        //When user open a new form and just close it and do not enter any data.
+        public void ClearAlgorithmsViewData()
+        {
+            var index = listAlgorithms.CheckedIndices[0];
+            listAlgorithms.ClearSelected();
+            listAlgorithms.SetItemCheckState(index, CheckState.Unchecked);
+            mMainController.DataModel.AlgorithmIndex = -1;
+            mMainController.DataModel.AlgorithmName = "";
+        }
+
         //Used to open new form if the algorithm have it
         private void OpenAlgorithmsForms()
         {
@@ -93,13 +103,13 @@ namespace CryptographyProject.View
             {
                 case (int)Algorithms.SimpleSubstitution:
                     {
-                        Form f = new SimpleSubstitutionAlphabet();
+                        Form f = new SimpleSubstitutionAlphabet(this);
                         f.Show();
                         break;
                     }
                 case (int)Algorithms.RC4:
                     {
-                        Form f = new RC4Key();
+                        Form f = new RC4Key(this);
                         f.Show();
                         break;
                     }

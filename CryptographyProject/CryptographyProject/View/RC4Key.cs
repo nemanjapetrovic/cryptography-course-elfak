@@ -13,9 +13,13 @@ namespace CryptographyProject.View
 {
     public partial class RC4Key : Form
     {
-        public RC4Key()
+        private Main mainForm;
+        private bool buttonOkPressed = false;
+
+        public RC4Key(Main mainForm)
         {
             InitializeComponent();
+            this.mainForm = mainForm;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -32,8 +36,16 @@ namespace CryptographyProject.View
 
             //Set
             RC4.Key = bytes;
-
+            buttonOkPressed = true;
             this.Close();
+        }
+
+        private void RC4Key_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!buttonOkPressed)
+            {
+                this.mainForm.ClearAlgorithmsViewData();
+            }
         }
     }
 }

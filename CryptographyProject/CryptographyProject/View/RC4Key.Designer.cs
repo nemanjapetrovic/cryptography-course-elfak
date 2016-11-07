@@ -73,6 +73,7 @@
             this.Name = "RC4Key";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RC4";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RC4Key_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

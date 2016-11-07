@@ -112,6 +112,7 @@
             this.Name = "SimpleSubstitutionAlphabet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple Substitution Alphabet";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SimpleSubstitutionAlphabet_FormClosing);
             this.Load += new System.EventHandler(this.SimpleSubstitutionAlphabet_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
