@@ -618,13 +618,15 @@ namespace CryptographyProject.Controller
                                 }
 
                                 //Reading and encrypting files                             
-                                byte inputValue = 0;
+                                byte[] readedValue = new byte[2];
+                                Encoding extendedAscii = Encoding.GetEncoding(850);
                                 while (br.BaseStream.Position < br.BaseStream.Length)
                                 {
                                     //ENC
-                                    inputValue = br.ReadByte();
-                                    var encryptedValue = XTEA.EncryptString(Encoding.ASCII.GetString(new[] { inputValue }), XTEA.Key);
-                                    byte[] write = System.Text.Encoding.ASCII.GetBytes(encryptedValue);
+                                    br.Read(readedValue, 0, 2);
+                                    var data = extendedAscii.GetString(readedValue);
+                                    var encryptedValue = XTEA.EncryptString(data, XTEA.Key);
+                                    byte[] write = extendedAscii.GetBytes(encryptedValue);
                                     bw.Write(write);
 
                                     if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
@@ -691,13 +693,15 @@ namespace CryptographyProject.Controller
                         {
                             using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                             {
-                                byte readedValue = 0;
+                                byte[] readedValue = new byte[8];
+                                Encoding extendedAscii = Encoding.GetEncoding(850);
                                 while (br.BaseStream.Position < br.BaseStream.Length)
                                 {
                                     //DEC
-                                    readedValue = br.ReadByte();
-                                    var decryptedValue = XTEA.Decrypt(Encoding.ASCII.GetString(new[] { readedValue }), XTEA.Key);
-                                    byte[] write = System.Text.Encoding.ASCII.GetBytes(decryptedValue);
+                                    br.Read(readedValue, 0, 8);
+                                    var data = extendedAscii.GetString(readedValue);
+                                    var decryptedValue = XTEA.Decrypt(data, XTEA.Key);
+                                    byte[] write = extendedAscii.GetBytes(decryptedValue);
                                     bw.Write(write);
 
                                     if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
