@@ -113,6 +113,18 @@ namespace CryptographyProject.View
                         f.Show();
                         break;
                     }
+                case (int)Algorithms.TEA:
+                    {
+                        Form f = new TEAXTEA(this, 2);
+                        f.Show();
+                        break;
+                    }
+                case (int)Algorithms.XTEA:
+                    {
+                        Form f = new TEAXTEA(this, 3);
+                        f.Show();
+                        break;
+                    }
             }
         }
 

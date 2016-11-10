@@ -10,7 +10,9 @@ namespace CryptographyProject.EncryptionAlgorithms
     public enum Algorithms
     {
         SimpleSubstitution = 0,
-        RC4 = 1
+        RC4 = 1,
+        TEA = 2,
+        XTEA = 3
     };
 
     /// <summary>
@@ -45,5 +47,11 @@ namespace CryptographyProject.EncryptionAlgorithms
         /// <param name="file"></param>
         /// <param name="model"></param>
         void RC4Decryption(FileInfo file, FormModel model);
+
+        void TEAEcnryption(FileInfo file, FormModel model);
+        void TEADecryption(FileInfo file, FormModel model);
+
+        void XTEAEcnryption(FileInfo file, FormModel model);
+        void XTEADecryption(FileInfo file, FormModel model);
     }
 }

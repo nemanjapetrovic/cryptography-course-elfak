@@ -54,11 +54,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\FileNameCreator.cs" />
+    <Compile Include="Common\UtilConverter.cs" />
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />
     <Compile Include="EncryptionAlgorithms\RC4.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
+    <Compile Include="EncryptionAlgorithms\TEA.cs" />
+    <Compile Include="EncryptionAlgorithms\XTEA.cs" />
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />
@@ -85,6 +88,12 @@
     <Compile Include="View\SimpleSubstitutionAlphabet.Designer.cs">
       <DependentUpon>SimpleSubstitutionAlphabet.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\TEAXTEA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\TEAXTEA.Designer.cs">
+      <DependentUpon>TEAXTEA.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="View\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -103,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\SimpleSubstitutionAlphabet.resx">
       <DependentUpon>SimpleSubstitutionAlphabet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\TEAXTEA.resx">
+      <DependentUpon>TEAXTEA.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
