@@ -9,126 +9,161 @@ using System.Threading.Tasks;
 //ctr mode radi tako sto imas brojac(bilo koja funkcija koja ne proizvodi ponovljive rezultate), njega enkriptujes i to sto dobijes XOR-ujes sa podacima koje zapravo zelis da enkriptujes
 namespace CryptographyProject.EncryptionAlgorithms
 {
+    /// <summary>
+    /// Written by Nenad Kragovic
+    /// https://www.linkedin.com/in/nenad-kragovic-397b76106
+    /// </summary>  
     public class TEA
     {
-        private static string _key;
+        public static string key;
+
+        public static UInt32[] K = new UInt32[4];
+
         public static string Key
         {
-            set
-            {
-                _key = value;
-            }
             get
             {
-                if (string.IsNullOrEmpty(_key))
-                {
-                    throw new Exception("Key is null or empty!");
-                }
-                return _key;
+                return key;
             }
-        }
-
-        public static string EncryptString(string Data, string Key)
-        {
-            if (Data.Length == 0)
-                throw new ArgumentException("Data must be at least 1 character in length.");
-
-            uint[] formattedKey = FormatKey(Key);
-
-            if (Data.Length % 2 != 0) Data += '\0'; // Make sure array is even in length.		
-            byte[] dataBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(Data);
-
-            string cipher = string.Empty;
-            uint[] tempData = new uint[2];
-            for (int i = 0; i < dataBytes.Length; i += 2)
+            set
             {
-                tempData[0] = dataBytes[i];
-                tempData[1] = dataBytes[i + 1];
-                code(tempData, formattedKey);
-                cipher += UtilConverter.ConvertUIntToString(tempData[0]) + UtilConverter.ConvertUIntToString(tempData[1]);
-            }
+                key = value;
+                string asciiKey = UtilConverter.FromCharArrayToString(UtilConverter.GetAsciiChars(key, key));
 
-            return cipher;
+                int point = 0;
+                for (int i = 0; i < K.Length; i++)
+                {
+                    uint output;
+
+                    output = ((uint)asciiKey[point] - 48);
+                    output += (((uint)asciiKey[point + 1] - 48) << 8);
+                    output += (((uint)asciiKey[point + 2] - 48) << 16);
+                    output += (((uint)asciiKey[point + 3] - 48) << 24);
+                    point += 4;
+                    K[i] = output;
+                }
+
+
+            }
         }
 
-        public static string Decrypt(string Data, string Key)
+        public static UInt32[] iv = new UInt32[2];
+        public static String Iv;
+        public static string IV
         {
-            uint[] formattedKey = FormatKey(Key);
+            get
+            {
+                return Iv;
+            }
+            set
+            {
+                key = value;
+                if (key != "")
+                {
+                    string asciiKey = UtilConverter.FromCharArrayToString(UtilConverter.GetAsciiChars(key, key));
+
+                    int point = 0;
+                    for (int i = 0; i < iv.Length; i++)
+                    {
+                        uint output;
+
+                        output = ((uint)asciiKey[point] - 48);
+                        output += (((uint)asciiKey[point + 1] - 48) << 8);
+                        output += (((uint)asciiKey[point + 2] - 48) << 16);
+                        output += (((uint)asciiKey[point + 3] - 48) << 24);
+                        point += 4;
+                        iv[i] = output;
+                    }
+                }
+
+            }
+        }
+
+        public static uint delta = 0x9e3779b9;
+
+        public static byte[] Encrypt(byte[] dataBytes)
+        {
+            UInt64[] res = new UInt64[dataBytes.Length / 2];
+
+            int k = 0;
+
+            for (int j = 0; j < dataBytes.Length; j += 2)
+            {
+                uint L = dataBytes[j];
+                uint R = dataBytes[j + 1];
+
+                uint L1 = L;
+                uint R1 = R;
+
+                uint v0 = L, v1 = R, sum = 0;
+                uint k0 = K[0], k1 = K[1], k2 = K[2], k3 = K[3];
+                for (int i = 0; i < 32; i++)
+                {
+                    sum += delta;
+                    v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
+                    v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
+                }
+                L = v0; R = v1;
+
+                res[k++] = ((UInt64)L << 32) | (UInt64)R;
+            }
+
+            byte[] result = new byte[res.Length * sizeof(UInt64)];
+
+            k = 0;
+            foreach (UInt64 o in res)
+            {
+                byte[] temp = BitConverter.GetBytes(o);
+                for (int i = 0; i < sizeof(UInt64); i++)
+                    result[k + i] = temp[i];
+                k += 8;
+            }
+
+            return result;
+        }
+
+        public static byte[] Decrypt(byte[] source)
+        {
+            UInt64[] o = new UInt64[((byte[])source).Length / 8];
+
 
             int x = 0;
-            uint[] tempData = new uint[2];
-            byte[] dataBytes = new byte[Data.Length / 8 * 2];
-            for (int i = 0; i < Data.Length; i += 8)
+            for (int i = 0; i < source.Length; i += 8)
             {
-                tempData[0] = UtilConverter.ConvertStringToUInt(Data.Substring(i, 4));
-                tempData[1] = UtilConverter.ConvertStringToUInt(Data.Substring(i + 4, 4));
-                decode(tempData, formattedKey);
-                dataBytes[x++] = (byte)tempData[0];
-                dataBytes[x++] = (byte)tempData[1];
+                o[x] = (UInt64)source[i] | (UInt64)source[i + 1] << 8 | (UInt64)source[i + 2] << 16 |
+                    (UInt64)source[i + 3] << 24 | (UInt64)source[i + 4] << 32 | (UInt64)source[i + 5] << 40 |
+                    (UInt64)source[i + 6] << 48 | (UInt64)source[i + 7] << 56;
+
+                x++;
             }
 
-            string decipheredString = System.Text.ASCIIEncoding.ASCII.GetString(dataBytes, 0, dataBytes.Length);
-            if (decipheredString[decipheredString.Length - 1] == '\0') // Strip the null char if it was added.
-                decipheredString = decipheredString.Substring(0, decipheredString.Length - 1);
-            return decipheredString;
-        }
+            byte[] dataBytes = new byte[o.Length * 2];
+            x = 0;
 
-        public static uint[] FormatKey(string Key)
-        {
-            if (Key.Length == 0)
-                throw new ArgumentException("Key must be between 1 and 16 characters in length");
-
-            Key = Key.PadRight(16, ' ').Substring(0, 16); // Ensure that the key is 16 chars in length.
-            uint[] formattedKey = new uint[4];
-
-            // Get the key into the correct format for TEA usage.
-            int j = 0;
-            for (int i = 0; i < Key.Length; i += 4)
-                formattedKey[j++] = UtilConverter.ConvertStringToUInt(Key.Substring(i, 4));
-
-            return formattedKey;
-        }
-
-        #region Tea Algorithm
-        public static void code(uint[] v, uint[] k)
-        {
-            uint y = v[0];
-            uint z = v[1];
-            uint sum = 0;
-            uint delta = 0x9e3779b9;
-            uint n = 32;
-
-            while (n-- > 0)
+            for (int j = 0; j < o.Length; j++)
             {
-                sum += delta;
-                y += (z << 4) + k[0] ^ z + sum ^ (z >> 5) + k[1];
-                z += (y << 4) + k[2] ^ y + sum ^ (y >> 5) + k[3];
-            }
+                uint L = Convert.ToUInt32(o[j] >> 32);
+                uint R = Convert.ToUInt32(o[j] & 0x00000000FFFFFFFF);
 
-            v[0] = y;
-            v[1] = z;
+                uint L1 = L;
+                uint R1 = R;
+
+                uint v0 = L, v1 = R, sum = 0xC6EF3720;
+                uint k0 = K[0], k1 = K[1], k2 = K[2], k3 = K[3];
+                for (int i = 0; i < 32; i++)
+                {
+                    v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
+                    v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
+                    sum -= delta;
+                }
+                L = v0; R = v1;
+
+
+                dataBytes[x++] = (byte)L;
+                dataBytes[x++] = (byte)R;
+            }
+            return dataBytes;
         }
 
-        public static void decode(uint[] v, uint[] k)
-        {
-            uint n = 32;
-            uint sum;
-            uint y = v[0];
-            uint z = v[1];
-            uint delta = 0x9e3779b9;
-
-            sum = delta << 5;
-
-            while (n-- > 0)
-            {
-                z -= (y << 4) + k[2] ^ y + sum ^ (y >> 5) + k[3];
-                y -= (z << 4) + k[0] ^ z + sum ^ (z >> 5) + k[1];
-                sum -= delta;
-            }
-
-            v[0] = y;
-            v[1] = z;
-        }
-        #endregion
     }
 }

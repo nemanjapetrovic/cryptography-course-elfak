@@ -8,44 +8,28 @@ namespace CryptographyProject.Common
 {
     public class UtilConverter
     {
-        /// <summary>
-		/// Converts a string of length 4 to a 32-bit unsigned integer.
-		/// </summary>
-		/// <param name="Input">The string of length 4 to convert.</param>
-		/// <returns>An encoded integer value representing a string of length 4.</returns>
-		public static uint ConvertStringToUInt(string Input)
+        public static string FromCharArrayToString(char[] start)
         {
-            uint output;
-            output = ((uint)Input[0]);
-            output += ((uint)Input[1] << 8);
-            output += ((uint)Input[2] << 16);
-            output += ((uint)Input[3] << 24);
-            return output;
-        }
-
-        /// <summary>
-        /// Converts a 32-bit unsigned integer to a string of length 4.
-        /// </summary>
-        /// <param name="Input">The unsigned integer to convert to a string.</param>
-        /// <returns>A string value represented by the encoded integer.</returns>
-        public static string ConvertUIntToString(uint Input)
-        {
-            StringBuilder output = new System.Text.StringBuilder();
-            output.Append((char)((Input & 0xFF)));
-            output.Append((char)((Input >> 8) & 0xFF));
-            output.Append((char)((Input >> 16) & 0xFF));
-            output.Append((char)((Input >> 24) & 0xFF));
-            return output.ToString();
-        }
-
-        public static string ConvertByteArrayToString(byte[] array)
-        {
-            string tmp = "";
-            foreach (var item in array)
+            string ret = "";
+            for (int i = 0; i < start.Length; i++)
             {
-                tmp += Convert.ToString(item);
+                ret += start[i];
             }
-            return tmp;
+
+            return ret;
+        }
+
+        public static char[] GetAsciiChars(string source, string key)
+        {
+            Encoding ascii = Encoding.ASCII;
+            Encoding enc_default = Encoding.Default;
+
+            byte[] asciiBytes = Encoding.Convert(enc_default, ascii, enc_default.GetBytes(key));
+            char[] asciiChars = new char[ascii.GetCharCount(asciiBytes, 0, asciiBytes.Length)];
+
+            ascii.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0);
+
+            return asciiChars;
         }
     }
 }

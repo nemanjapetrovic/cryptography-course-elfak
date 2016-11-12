@@ -26,9 +26,9 @@ namespace CryptographyProject.View
         private void btnOK_Click(object sender, EventArgs e)
         {
             //Validate
-            if (txtKey.Text.Length < 1 || txtKey.Text.Length > 16)
+            if (txtKey.Text.Length < 16 || txtKey.Text.Length > 16)
             {
-                MessageBox.Show("Enter maximum 128bits long key (16 characters long)!");
+                MessageBox.Show("Enter 128bits long key (16 characters long)!");
                 return;
             }
 

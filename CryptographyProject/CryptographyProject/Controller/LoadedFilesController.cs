@@ -455,44 +455,30 @@ namespace CryptographyProject.Controller
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
 
                 //Read a file char by char, and encrypt it
-                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
                 {
-                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                     {
-                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                        //Writing the extension                                
+                        char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
+                        char extensionLength = (char)extension.Length;
+                        bw.Write(extensionLength);
+                        for (var k = 0; k < extension.Length; k++)
                         {
-                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
-                            {
-                                //Writing the extension                                
-                                char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
-                                char extensionLength = (char)extension.Length;
-                                bw.Write(extensionLength);
-                                for (var k = 0; k < extension.Length; k++)
-                                {
-                                    bw.Write(extension[k]);
-                                }
+                            bw.Write(extension[k]);
+                        }
 
-                                //Reading and encrypting files                             
-                                byte[] inputValue = new byte[2];//64bits at the time
-                                while (br.BaseStream.Position < br.BaseStream.Length)
-                                {
-                                    //ENC
-                                    br.Read(inputValue, 0, 2);
-                                    string data = UtilConverter.ConvertByteArrayToString(inputValue);
-                                    var encryptedValue = TEA.EncryptString(data, TEA.Key);
-                                    bw.Write(encryptedValue);
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+                        var encryptedValue = TEA.Encrypt(readedValue);
+                        bw.Write(encryptedValue);
 
-                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
-                                    {
-                                        bw.Dispose();
-                                        fsw.Dispose();
-                                        br.Dispose();
-                                        fsr.Dispose();
-                                        File.Delete(outputFileName);
-                                        Thread.CurrentThread.Abort();
-                                    }
-                                }
-                            }
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
                         }
                     }
                 }
@@ -523,51 +509,49 @@ namespace CryptographyProject.Controller
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
 
                 //Read a file char by char, and decrypt it
-                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
+                //Reading the extension
+                var readedValues = File.ReadAllBytes(file.FullName);
+                int lenght = 0;
+                var extensionLength = (int)readedValues[0];
+                lenght++;
+                char[] extension = new char[extensionLength];
+                int j = 0;
+                for (var i = 1; i <= extensionLength; i++)
                 {
-                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
+                    extension[j] = (char)readedValues[i];
+                    j++;
+                    lenght++;
+                }
+
+                var finalExtesnion = "." + new string(extension);
+
+                //OutputFileName
+                outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    finalExtesnion);
+
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                     {
-                        //Reading the extension                        
-                        var extensionLength = (int)br.ReadByte();
-                        char[] extension = new char[extensionLength];
-                        for (var i = 0; i < extensionLength; i++)
+                        //DEC
+                        byte[] newValue = new byte[readedValues.Length - lenght];
+                        int k = 0;
+                        for (int i = lenght; i < readedValues.Length; i++)
                         {
-                            extension[i] = (char)br.ReadByte();
+                            newValue[k] = readedValues[i];
+                            k++;
                         }
-                        var finalExtesnion = "." + new string(extension);
+                        var decryptedValue = TEA.Decrypt(newValue);
+                        bw.Write(decryptedValue);
 
-                        //OutputFileName
-                        outputFileName = FileNameCreator.CreateFileDecryptedName(
-                            model.Folders.OutputFolder,
-                            file.Name,
-                            finalExtesnion);
-
-                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                         {
-                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
-                            {
-                                //Reading and decryptiong files
-                                byte[] inputValue = new byte[8];//64bits at the time
-                                while (br.BaseStream.Position < br.BaseStream.Length)
-                                {
-                                    //DEC
-                                    br.Read(inputValue, 0, 8);
-                                    string data = UtilConverter.ConvertByteArrayToString(inputValue);
-                                    var decryptedValue = TEA.Decrypt(data, TEA.Key);
-                                    bw.Write(decryptedValue);
-
-
-                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
-                                    {
-                                        bw.Dispose();
-                                        fsw.Dispose();
-                                        br.Dispose();
-                                        fsr.Dispose();
-                                        File.Delete(outputFileName);
-                                        Thread.CurrentThread.Abort();
-                                    }
-                                }
-                            }
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
                         }
                     }
                 }
@@ -601,46 +585,31 @@ namespace CryptographyProject.Controller
                 loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
 
                 //Read a file char by char, and encrypt it
-                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
                 {
-                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                     {
-                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                        //Writing the extension                                
+                        char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
+                        char extensionLength = (char)extension.Length;
+                        bw.Write(extensionLength);
+                        for (var k = 0; k < extension.Length; k++)
                         {
-                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
-                            {
-                                //Writing the extension                                
-                                char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
-                                char extensionLength = (char)extension.Length;
-                                bw.Write(extensionLength);
-                                for (var k = 0; k < extension.Length; k++)
-                                {
-                                    bw.Write(extension[k]);
-                                }
+                            bw.Write(extension[k]);
+                        }
 
-                                //Reading and encrypting files                             
-                                byte[] readedValue = new byte[2];
-                                Encoding extendedAscii = Encoding.GetEncoding(850);
-                                while (br.BaseStream.Position < br.BaseStream.Length)
-                                {
-                                    //ENC
-                                    br.Read(readedValue, 0, 2);
-                                    var data = extendedAscii.GetString(readedValue);
-                                    var encryptedValue = XTEA.EncryptString("This is a test string to encrypt.", XTEA.Key);
-                                    byte[] write = extendedAscii.GetBytes(encryptedValue);
-                                    bw.Write(write);
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+                        var encryptedValue = XTEA.Encrypt(readedValue);
+                        bw.Write(encryptedValue);
 
-                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
-                                    {
-                                        bw.Dispose();
-                                        fsw.Dispose();
-                                        br.Dispose();
-                                        fsr.Dispose();
-                                        File.Delete(outputFileName);
-                                        Thread.CurrentThread.Abort();
-                                    }
-                                }
-                            }
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
                         }
                     }
                 }
@@ -670,52 +639,48 @@ namespace CryptographyProject.Controller
                 //Log
                 loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
 
-                //Read a file char by char, and decrypt it
-                using (FileStream fsr = new FileStream(file.FullName, FileMode.Open))
+                //Reading the extension  
+                var readedValues = File.ReadAllBytes(file.FullName);
+                int lenght = 0;
+                var extensionLength = (int)readedValues[0];
+                lenght++;
+                char[] extension = new char[extensionLength];
+                int j = 0;
+                for (var i = 1; i <= extensionLength; i++)
                 {
-                    using (BinaryReader br = new BinaryReader(fsr, new ASCIIEncoding()))
+                    extension[j] = (char)readedValues[i];
+                    j++;
+                    lenght++;
+                }
+                var finalExtesnion = "." + new string(extension);
+
+                //OutputFileName
+                outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    finalExtesnion);
+
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
                     {
-                        //Reading the extension                        
-                        var extensionLength = (int)br.ReadByte();
-                        char[] extension = new char[extensionLength];
-                        for (var i = 0; i < extensionLength; i++)
+                        //DEC
+                        byte[] newValue = new byte[readedValues.Length - lenght];
+                        int k = 0;
+                        for (int i = lenght; i < readedValues.Length; i++)
                         {
-                            extension[i] = (char)br.ReadByte();
+                            newValue[k] = readedValues[i];
+                            k++;
                         }
-                        var finalExtesnion = "." + new string(extension);
+                        var decryptedValue = XTEA.Decrypt(newValue);
+                        bw.Write(decryptedValue);
 
-                        //OutputFileName
-                        outputFileName = FileNameCreator.CreateFileDecryptedName(
-                            model.Folders.OutputFolder,
-                            file.Name,
-                            finalExtesnion);
-
-                        using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                         {
-                            using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
-                            {
-                                byte[] readedValue = new byte[8];
-                                Encoding extendedAscii = Encoding.GetEncoding(850);
-                                while (br.BaseStream.Position < br.BaseStream.Length)
-                                {
-                                    //DEC
-                                    br.Read(readedValue, 0, 8);
-                                    var data = extendedAscii.GetString(readedValue);
-                                    var decryptedValue = XTEA.Decrypt("Örug\u0002\u008e\u008cõÐ\u0097Uð¸\u000e­BSpQd÷\"èvF<á¸\u0084ð!\u001e\u0082§µÎÓõ©|\u0091½Mð\u008d\u0095þ;Ô0$DIvZ\tèÍ'aÒÒx^\by\u0014\ráÿómÇ#ó)y%%´\u0084\u009b\u001d¦ñiBdM÷\u008e\u0096d>¿\u009f«\u0019\u0090ûS\u001d\u0082ÎgmOgû EÚ\u009elµ_vyÐwS)\u0019½ô>äç\tR\f\u000eOëZÖ", XTEA.Key);
-                                    byte[] write = extendedAscii.GetBytes(decryptedValue);
-                                    bw.Write(write);
-
-                                    if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
-                                    {
-                                        bw.Dispose();
-                                        fsw.Dispose();
-                                        br.Dispose();
-                                        fsr.Dispose();
-                                        File.Delete(outputFileName);
-                                        Thread.CurrentThread.Abort();
-                                    }
-                                }
-                            }
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
                         }
                     }
                 }
