@@ -556,6 +556,7 @@ namespace CryptographyProject.Controller
                                     var decryptedValue = TEA.Decrypt(data, TEA.Key);
                                     bw.Write(decryptedValue);
 
+
                                     if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                                     {
                                         bw.Dispose();
@@ -625,7 +626,7 @@ namespace CryptographyProject.Controller
                                     //ENC
                                     br.Read(readedValue, 0, 2);
                                     var data = extendedAscii.GetString(readedValue);
-                                    var encryptedValue = XTEA.EncryptString(data, XTEA.Key);
+                                    var encryptedValue = XTEA.EncryptString("This is a test string to encrypt.", XTEA.Key);
                                     byte[] write = extendedAscii.GetBytes(encryptedValue);
                                     bw.Write(write);
 
@@ -700,7 +701,7 @@ namespace CryptographyProject.Controller
                                     //DEC
                                     br.Read(readedValue, 0, 8);
                                     var data = extendedAscii.GetString(readedValue);
-                                    var decryptedValue = XTEA.Decrypt(data, XTEA.Key);
+                                    var decryptedValue = XTEA.Decrypt("Örug\u0002\u008e\u008cõÐ\u0097Uð¸\u000e­BSpQd÷\"èvF<á¸\u0084ð!\u001e\u0082§µÎÓõ©|\u0091½Mð\u008d\u0095þ;Ô0$DIvZ\tèÍ'aÒÒx^\by\u0014\ráÿómÇ#ó)y%%´\u0084\u009b\u001d¦ñiBdM÷\u008e\u0096d>¿\u009f«\u0019\u0090ûS\u001d\u0082ÎgmOgû EÚ\u009elµ_vyÐwS)\u0019½ô>äç\tR\f\u000eOëZÖ", XTEA.Key);
                                     byte[] write = extendedAscii.GetBytes(decryptedValue);
                                     bw.Write(write);
 

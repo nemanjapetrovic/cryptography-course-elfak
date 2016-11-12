@@ -28,14 +28,13 @@ namespace CryptographyProject.EncryptionAlgorithms
 
         public static string EncryptString(string Data, string Key)
         {
-            Encoding extendedAscii = Encoding.GetEncoding(850);
             if (Data.Length == 0)
                 throw new ArgumentException("Data must be at least 1 character in length.");
 
             uint[] formattedKey = FormatKey(Key);
 
             if (Data.Length % 2 != 0) Data += '\0'; // Make sure array is even in length.		
-            byte[] dataBytes = extendedAscii.GetBytes(Data);
+            byte[] dataBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(Data);
 
             string cipher = string.Empty;
             uint[] tempData = new uint[2];
@@ -52,7 +51,6 @@ namespace CryptographyProject.EncryptionAlgorithms
 
         public static string Decrypt(string Data, string Key)
         {
-            Encoding extendedAscii = Encoding.GetEncoding(850);
             uint[] formattedKey = FormatKey(Key);
 
             int x = 0;
@@ -66,8 +64,7 @@ namespace CryptographyProject.EncryptionAlgorithms
                 dataBytes[x++] = (byte)tempData[0];
                 dataBytes[x++] = (byte)tempData[1];
             }
-
-            string decipheredString = extendedAscii.GetString(dataBytes);
+            string decipheredString = System.Text.ASCIIEncoding.ASCII.GetString(dataBytes, 0, dataBytes.Length);
             if (decipheredString[decipheredString.Length - 1] == '\0')
                 decipheredString = decipheredString.Substring(0, decipheredString.Length - 1);
             return decipheredString;
