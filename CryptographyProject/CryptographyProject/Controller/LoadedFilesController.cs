@@ -473,11 +473,11 @@ namespace CryptographyProject.Controller
                                 }
 
                                 //Reading and encrypting files                             
-                                byte[] inputValue = new byte[8];//64bits at the time
+                                byte[] inputValue = new byte[2];//64bits at the time
                                 while (br.BaseStream.Position < br.BaseStream.Length)
                                 {
                                     //ENC
-                                    br.Read(inputValue, 0, 8);
+                                    br.Read(inputValue, 0, 2);
                                     string data = UtilConverter.ConvertByteArrayToString(inputValue);
                                     var encryptedValue = TEA.EncryptString(data, TEA.Key);
                                     bw.Write(encryptedValue);
