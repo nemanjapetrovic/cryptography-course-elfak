@@ -12,7 +12,9 @@ namespace CryptographyProject.EncryptionAlgorithms
         SimpleSubstitution = 0,
         RC4 = 1,
         TEA = 2,
-        XTEA = 3
+        XTEA = 3,
+        TEA_BMP = 4,
+        XTEA_BMP = 5
     };
 
     /// <summary>
@@ -53,5 +55,12 @@ namespace CryptographyProject.EncryptionAlgorithms
 
         void XTEAEcnryption(FileInfo file, FormModel model);
         void XTEADecryption(FileInfo file, FormModel model);
+
+        void TEABMPEcnryption(FileInfo file, FormModel model);
+        void TEABMPDecryption(FileInfo file, FormModel model);
+
+        void XTEABMPEcnryption(FileInfo file, FormModel model);
+        void XTEABMPDecryption(FileInfo file, FormModel model);
+
     }
 }

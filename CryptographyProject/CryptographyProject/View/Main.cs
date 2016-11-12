@@ -125,6 +125,18 @@ namespace CryptographyProject.View
                         f.Show();
                         break;
                     }
+                case (int)Algorithms.TEA_BMP:
+                    {
+                        Form f = new TEAXTEA(this, 2);
+                        f.Show();
+                        break;
+                    }
+                case (int)Algorithms.XTEA_BMP:
+                    {
+                        Form f = new TEAXTEA(this, 3);
+                        f.Show();
+                        break;
+                    }
             }
         }
 
@@ -192,6 +204,7 @@ namespace CryptographyProject.View
             }
             catch (Exception ex)
             {
+                Ended();
                 MessageBox.Show(ex.Message);
             }
         }

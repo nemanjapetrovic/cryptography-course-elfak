@@ -7,6 +7,7 @@ using CryptographyProject.EncryptionAlgorithms;
 using CryptographyProject.Common;
 using CryptographyProject.View;
 using System.Text;
+using System.Linq;
 
 namespace CryptographyProject.Controller
 {
@@ -108,6 +109,30 @@ namespace CryptographyProject.Controller
                                 else
                                 {
                                     new Thread(() => XTEADecryption(queueFiles.Take(), model)).Start();
+                                }
+                                break;
+                            }
+                        case (int)Algorithms.TEA_BMP:
+                            {
+                                if (model.EncryptionChosen)
+                                {
+                                    new Thread(() => TEABMPEcnryption(queueFiles.Take(), model)).Start();
+                                }
+                                else
+                                {
+                                    new Thread(() => TEABMPDecryption(queueFiles.Take(), model)).Start();
+                                }
+                                break;
+                            }
+                        case (int)Algorithms.XTEA_BMP:
+                            {
+                                if (model.EncryptionChosen)
+                                {
+                                    new Thread(() => XTEABMPEcnryption(queueFiles.Take(), model)).Start();
+                                }
+                                else
+                                {
+                                    new Thread(() => XTEABMPDecryption(queueFiles.Take(), model)).Start();
                                 }
                                 break;
                             }
@@ -673,6 +698,254 @@ namespace CryptographyProject.Controller
                             k++;
                         }
                         var decryptedValue = XTEA.Decrypt(newValue);
+                        bw.Write(decryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Dec exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void TEABMPEcnryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                if (!file.Extension.Contains("bmp"))
+                {
+                    throw new Exception("File is not bmp!");
+                }
+                //OutputFileName
+                string outputFileName = FileNameCreator.CreateFileEncryptedNameBMP(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    model.AlgorithmName);
+
+                //Log
+                loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Read a file char by char, and encrypt it
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+
+                        long pos = readedValue[10] + 256 * (readedValue[11] + 256 * (readedValue[12] + 256 * readedValue[13]));
+                        byte[] header = new byte[pos];
+                        for (int i = 0; i < header.Length; i++)
+                            header[i] = readedValue[i];
+
+                        byte[] data = readedValue.Skip(header.Length).ToArray();
+
+                        var encryptedValue = TEA.Encrypt(data);
+                        encryptedValue = header.Concat(encryptedValue).ToArray();
+                        bw.Write(encryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Enc exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void TEABMPDecryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                if (!file.Extension.Contains("bmp"))
+                {
+                    throw new Exception("File is not bmp!");
+                }
+                //OutputFileName
+                string outputFileName = "";
+
+                //Log
+                loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //OutputFileName
+                outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    ".bmp");
+
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+
+                        long pos = readedValue[10] + 256 * (readedValue[11] + 256 * (readedValue[12] + 256 * readedValue[13]));
+                        byte[] header = new byte[pos];
+                        for (int i = 0; i < header.Length; i++)
+                            header[i] = readedValue[i];
+
+                        byte[] data = readedValue.Skip(header.Length).ToArray();
+
+                        var decryptedValue = TEA.Decrypt(data);
+                        decryptedValue = header.Concat(decryptedValue).ToArray();
+                        bw.Write(decryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Dec exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void XTEABMPEcnryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                if (!file.Extension.Contains("bmp"))
+                {
+                    throw new Exception("File is not bmp!");
+                }
+                //OutputFileName
+                string outputFileName = FileNameCreator.CreateFileEncryptedNameBMP(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    model.AlgorithmName);
+
+                //Log
+                loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Read a file char by char, and encrypt it
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+
+                        long pos = readedValue[10] + 256 * (readedValue[11] + 256 * (readedValue[12] + 256 * readedValue[13]));
+                        byte[] header = new byte[pos];
+                        for (int i = 0; i < header.Length; i++)
+                            header[i] = readedValue[i];
+
+                        byte[] data = readedValue.Skip(header.Length).ToArray();
+
+                        var encryptedValue = XTEA.Encrypt(data);
+                        encryptedValue = header.Concat(encryptedValue).ToArray();
+                        bw.Write(encryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Enc exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void XTEABMPDecryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                if (!file.Extension.Contains("bmp"))
+                {
+                    throw new Exception("File is not bmp!");
+                }
+                //OutputFileName
+                string outputFileName = "";
+
+                //Log
+                loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //OutputFileName
+                outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    ".bmp");
+
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+
+                        long pos = readedValue[10] + 256 * (readedValue[11] + 256 * (readedValue[12] + 256 * readedValue[13]));
+                        byte[] header = new byte[pos];
+                        for (int i = 0; i < header.Length; i++)
+                            header[i] = readedValue[i];
+
+                        byte[] data = readedValue.Skip(header.Length).ToArray();
+
+                        var decryptedValue = XTEA.Decrypt(data);
+                        decryptedValue = header.Concat(decryptedValue).ToArray();
                         bw.Write(decryptedValue);
 
                         if (LoadedFilesController._END_OF_ENC_DEC_THREADS)

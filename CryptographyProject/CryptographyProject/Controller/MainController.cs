@@ -90,6 +90,13 @@ namespace CryptographyProject.Controller
                 throw new Exception("File watcher is null!");
             }
 
+            if ((this.DataModel.AlgorithmIndex == (int)Algorithms.TEA_BMP ||
+                this.DataModel.AlgorithmIndex == (int)Algorithms.XTEA_BMP)
+                && this.DataModel.Folders.InputFolder.Equals(this.DataModel.Folders.OutputFolder))
+            {
+                throw new Exception("When using TEA or XTEA for BMP enc/dec you need to have sepearte folders!");
+            }
+
             //Load the existing files in a input folder
             this.LoadAllFiles();
 
@@ -137,18 +144,19 @@ namespace CryptographyProject.Controller
                 return true;
             }
 
-            //Want decryption and the file does not contain .enc extension
-            if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(Constants.FileName.ENC))
-            {
-                return true;
-            }
-
             //File was in database (history.json), so we can skip it, this file was encrypted/decrypted sometime
             if (historyController.FileExists(file))
             {
                 return true;
             }
 
+            //Want decryption and the file does not contain .enc extension
+            if (!this.DataModel.EncryptionChosen && !file.Extension.ToLower().Contains(Constants.FileName.ENC))
+            {
+                if (file.Extension.Contains("bmp"))
+                    return false;
+                return true;
+            }
             //File OK
             return false;
         }

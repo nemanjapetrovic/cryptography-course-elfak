@@ -58,5 +58,26 @@ namespace CryptographyProject.Common
             // ..\somefile.extension
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Calling only when we encrypt BMP image files.
+        /// </summary>
+        /// <param name="outputFolder"></param>
+        /// <param name="fileName"></param>
+        /// <param name="algorithmName"></param>
+        /// <returns></returns>
+        public static string CreateFileEncryptedNameBMP(string outputFolder, string fileName, string algorithmName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(outputFolder)
+              .Append("\\")
+              .Append(Path.GetFileNameWithoutExtension(fileName))
+              .Append("_")
+              .Append(algorithmName)
+              .Append(".bmp");
+
+            // ..\filename_algorithmname.enc
+            return sb.ToString();
+        }
     }
 }

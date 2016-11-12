@@ -46,7 +46,7 @@ namespace CryptographyProject.EncryptionAlgorithms
         }
 
         public static UInt32[] iv = new UInt32[2];
-        public static String Iv;
+        public static string Iv;
         public static string IV
         {
             get

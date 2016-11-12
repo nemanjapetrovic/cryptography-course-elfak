@@ -259,7 +259,9 @@
             "Simple substitution",
             "RC4",
             "TEA",
-            "XTEA"});
+            "XTEA",
+            "TEA_BMP",
+            "XTEA_BMP"});
             this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
             this.listAlgorithms.Name = "listAlgorithms";
             this.listAlgorithms.Size = new System.Drawing.Size(240, 94);

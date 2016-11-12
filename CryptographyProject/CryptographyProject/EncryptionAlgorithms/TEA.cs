@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//ctr mode radi tako sto imas brojac(bilo koja funkcija koja ne proizvodi ponovljive rezultate), njega enkriptujes i to sto dobijes XOR-ujes sa podacima koje zapravo zelis da enkriptujes
+//ctr mode radi tako sto imas brojac(bilo koja funkcija koja ne proizvodi ponovljive rezultate), 
+//njega enkriptujes i to sto dobijes XOR-ujes sa podacima koje zapravo zelis da enkriptujes
 namespace CryptographyProject.EncryptionAlgorithms
 {
     /// <summary>
@@ -48,7 +49,7 @@ namespace CryptographyProject.EncryptionAlgorithms
         }
 
         public static UInt32[] iv = new UInt32[2];
-        public static String Iv;
+        public static string Iv;
         public static string IV
         {
             get
