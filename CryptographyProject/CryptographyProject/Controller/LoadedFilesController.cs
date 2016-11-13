@@ -136,6 +136,18 @@ namespace CryptographyProject.Controller
                                 }
                                 break;
                             }
+                        case (int)Algorithms.Knapsack:
+                            {
+                                if (model.EncryptionChosen)
+                                {
+                                    new Thread(() => KnapsackEncryption(queueFiles.Take(), model)).Start();
+                                }
+                                else
+                                {
+                                    new Thread(() => KnapsackDecryption(queueFiles.Take(), model)).Start();
+                                }
+                                break;
+                            }
                     }
                 }
                 Thread.Sleep(500);
@@ -947,6 +959,137 @@ namespace CryptographyProject.Controller
                         var decryptedValue = XTEA.Decrypt(data);
                         decryptedValue = header.Concat(decryptedValue).ToArray();
                         bw.Write(decryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Dec exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void KnapsackEncryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                //OutputFileName
+                string outputFileName = FileNameCreator.CreateFileEncryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    model.AlgorithmName);
+
+                //Log
+                loggerController.Add(" ! File enc: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Read a file char by char, and encrypt it
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //Writing the extension                                
+                        char[] extension = file.Extension.Substring(1, file.Extension.Length - 1).ToCharArray();
+                        char extensionLength = (char)extension.Length;
+                        bw.Write(extensionLength);
+                        for (var k = 0; k < extension.Length; k++)
+                        {
+                            bw.Write(extension[k]);
+                        }
+
+                        //Reading and encrypting files                             
+                        var readedValue = File.ReadAllBytes(file.FullName);
+                        var encryptedValue = KnapsackAlg.Encrypt(readedValue);
+                        bw.Write(encryptedValue);
+
+                        if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
+                        {
+                            bw.Dispose();
+                            fsw.Dispose();
+
+                            File.Delete(outputFileName);
+                            Thread.CurrentThread.Abort();
+                        }
+                    }
+                }
+                threadSuccesfull = true;
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                loggerController.Add(" ? Enc exception: " + ex.Message);
+                threadSuccesfull = false;
+            }
+            finally
+            {
+                this.ThreadEnds(file, threadSuccesfull, timeStarted);
+            }
+        }
+
+        public void KnapsackDecryption(FileInfo file, FormModel model)
+        {
+            bool threadSuccesfull = false;
+            var timeStarted = DateTime.Now;
+            try
+            {
+                //OutputFileName
+                string outputFileName = "";
+
+                //Log
+                loggerController.Add(" ! File dec: " + file.Name + ", Alg: " + model.AlgorithmName);
+
+                //Reading the extension  
+                var readedValues = File.ReadAllBytes(file.FullName);
+                int lenght = 0;
+                var extensionLength = (int)readedValues[0];
+                lenght++;
+                char[] extension = new char[extensionLength];
+                int j = 0;
+                for (var i = 1; i <= extensionLength; i++)
+                {
+                    extension[j] = (char)readedValues[i];
+                    j++;
+                    lenght++;
+                }
+                var finalExtesnion = "." + new string(extension);
+
+                //OutputFileName
+                outputFileName = FileNameCreator.CreateFileDecryptedName(
+                    model.Folders.OutputFolder,
+                    file.Name,
+                    finalExtesnion);
+
+                using (FileStream fsw = new FileStream(outputFileName, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fsw, new ASCIIEncoding()))
+                    {
+                        //DEC
+                        byte[] newValue = new byte[readedValues.Length - lenght];
+                        int k = 0;
+                        for (int i = lenght + 1; i < readedValues.Length; i++)
+                        {
+                            newValue[k] = readedValues[i];
+                            k++;
+                        }
+                        var dataToDec = System.Text.Encoding.ASCII.GetString(newValue);
+                        var decryptedValue = KnapsackAlg.Decrypt(dataToDec);
+                        var write = System.Text.Encoding.ASCII.GetString(decryptedValue);
+                        bw.Write(write);
 
                         if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                         {

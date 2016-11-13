@@ -14,7 +14,8 @@ namespace CryptographyProject.EncryptionAlgorithms
         TEA = 2,
         XTEA = 3,
         TEA_BMP = 4,
-        XTEA_BMP = 5
+        XTEA_BMP = 5,
+        Knapsack = 6
     };
 
     /// <summary>
@@ -62,5 +63,7 @@ namespace CryptographyProject.EncryptionAlgorithms
         void XTEABMPEcnryption(FileInfo file, FormModel model);
         void XTEABMPDecryption(FileInfo file, FormModel model);
 
+        void KnapsackEncryption(FileInfo file, FormModel model);
+        void KnapsackDecryption(FileInfo file, FormModel model);
     }
 }

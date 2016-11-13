@@ -58,6 +58,7 @@
     <Compile Include="Controller\HistoryController.cs" />
     <Compile Include="EncryptionAlgorithms\IEncryptionAlgorithms.cs" />
     <Compile Include="Controller\LoggerController.cs" />
+    <Compile Include="EncryptionAlgorithms\Knapsack.cs" />
     <Compile Include="EncryptionAlgorithms\RC4.cs" />
     <Compile Include="EncryptionAlgorithms\SimpleSubstituionCipher.cs" />
     <Compile Include="EncryptionAlgorithms\TEA.cs" />
@@ -65,6 +66,12 @@
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Model\FormModel.cs" />
     <Compile Include="Model\Folders.cs" />
+    <Compile Include="View\Knapsack.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Knapsack.Designer.cs">
+      <DependentUpon>Knapsack.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +101,9 @@
     <Compile Include="View\TEAXTEA.Designer.cs">
       <DependentUpon>TEAXTEA.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\Knapsack.resx">
+      <DependentUpon>Knapsack.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

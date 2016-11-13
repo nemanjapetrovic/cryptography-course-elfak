@@ -261,7 +261,8 @@
             "TEA",
             "XTEA",
             "TEA_BMP",
-            "XTEA_BMP"});
+            "XTEA_BMP",
+            "Knapsack"});
             this.listAlgorithms.Location = new System.Drawing.Point(6, 22);
             this.listAlgorithms.Name = "listAlgorithms";
             this.listAlgorithms.Size = new System.Drawing.Size(240, 94);

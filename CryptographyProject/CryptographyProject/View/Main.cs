@@ -137,6 +137,12 @@ namespace CryptographyProject.View
                         f.Show();
                         break;
                     }
+                case (int)Algorithms.Knapsack:
+                    {
+                        Form f = new Knapsack(this);
+                        f.Show();
+                        break;
+                    }
             }
         }
 
