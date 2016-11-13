@@ -77,8 +77,10 @@ namespace CryptographyProject.EncryptionAlgorithms
         {
             N = n; m = M;
             im = 1;
-            while (im * m % N != 1)
+            while (((im * m) % n != 1) && (m < n))
+            {
                 im++;
+            }
             Random rnd = new Random();
             P[0] = rnd.Next(1, 10);
             P[1] = P[0] + rnd.Next(1, 20);
@@ -90,7 +92,7 @@ namespace CryptographyProject.EncryptionAlgorithms
             P[7] = P[0] + P[1] + P[2] + P[3] + P[4] + P[5] + P[6] + rnd.Next(1, 20);
 
             for (int i = 0; i < 8; i++)
-                J[i] = (P[i] * m % N);
+                J[i] = (P[i] * m) % N;
         }
 
         public static void SetKeys(int[] keysP, int n, int M)
@@ -103,67 +105,58 @@ namespace CryptographyProject.EncryptionAlgorithms
             N = n;
             m = M;
             im = 1;
-            while (im * m % N != 1)
+            while (((im * m) % n != 1) && (m < n))
             {
                 im++;
             }
             for (int i = 0; i < 8; i++)
-                J[i] = (P[i] * m % N);
+                J[i] = (P[i] * m) % N;
         }
 
-        public static string Encrypt(byte[] fileBytes)
+        public static int Encrypt(string binaryByte)
         {
-            //Read all bytes
-            string encrypted_stream = "";
-            for (int i = 0; i < fileBytes.Length; i++)
+            int C = 0;
+
+            for (int i = 0; i < binaryByte.Length; i++)
             {
-                int sum = 0;
-                for (int j = 0; j < 8; j++)
+                char c = binaryByte[i];
+                if (c == '1')
                 {
-                    if (fileBytes[i] % 2 != 0)
-                        sum += J[7 - j];
-                    fileBytes[i] >>= 1;
+                    C += Convert.ToInt32(J[i]);
                 }
-                encrypted_stream += sum.ToString() + " ";
             }
-            return encrypted_stream;
-            //write all text       
+
+            return C;
         }
 
-        public static byte[] Decrypt(string Data)
+
+        public static string Decrypt(int C)
         {
-            //Read all Text
-            byte[] decrypted_byte_array = new byte[Data.Length];
-            string[] encrypted_array = Data.Split(' ');
-            for (int i = 0; i < encrypted_array.Length; i++)
+            int n = Convert.ToInt32(KnapsackAlg.N);
+            int im = Convert.ToInt32(KnapsackAlg.im);
+
+            int d = (im * C) % n;
+            int startIndex = 7;
+            string dcr = "";
+
+            while (startIndex >= 0 && d > 0)
             {
-                int T;
-                try
+                int val = (int)P[startIndex];
+                if (val > d)
                 {
-                    T = int.Parse(encrypted_array[i]);
+                    dcr = "0" + dcr;
                 }
-                catch
+                else
                 {
-                    continue;
+                    dcr = "1" + dcr;
+                    d -= val;
                 }
-                int TC = T * im % N;
-                byte decrypted_byte = 0;
-                for (int k = 0; k < 8; k++)
-                {
-                    if (TC >= P[7 - k])
-                    {
-                        decrypted_byte += (byte)Math.Pow(2.0, (double)k);
-                        TC -= P[7 - k];
-                    }
-                }
-                decrypted_byte_array[i] = decrypted_byte;
+
+                startIndex--;
             }
-            return decrypted_byte_array;
-            //Write all bytes
+
+            return dcr;
         }
-
-
-
 
     }
 }

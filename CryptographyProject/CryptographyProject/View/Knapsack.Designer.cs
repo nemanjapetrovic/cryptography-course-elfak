@@ -125,6 +125,7 @@
             this.txtPrivate.Name = "txtPrivate";
             this.txtPrivate.Size = new System.Drawing.Size(274, 20);
             this.txtPrivate.TabIndex = 9;
+            this.txtPrivate.Text = "2,3,7,14,30,57,120,251";
             // 
             // btnUserChanged
             // 

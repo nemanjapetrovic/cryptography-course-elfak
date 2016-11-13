@@ -1012,10 +1012,15 @@ namespace CryptographyProject.Controller
                             bw.Write(extension[k]);
                         }
 
-                        //Reading and encrypting files                             
+                        //Reading and encrypting files                     
                         var readedValue = File.ReadAllBytes(file.FullName);
-                        var encryptedValue = KnapsackAlg.Encrypt(readedValue);
-                        bw.Write(encryptedValue);
+                        string output = "";
+                        foreach (byte b in readedValue)
+                        {
+                            string s = UtilConverter.FromDeciamlToBinary(b);
+                            output += KnapsackAlg.Encrypt(s) + " ";
+                        }
+                        bw.Write(output);
 
                         if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                         {
@@ -1086,10 +1091,24 @@ namespace CryptographyProject.Controller
                             newValue[k] = readedValues[i];
                             k++;
                         }
+
+
                         var dataToDec = System.Text.Encoding.ASCII.GetString(newValue);
-                        var decryptedValue = KnapsackAlg.Decrypt(dataToDec);
-                        var write = System.Text.Encoding.ASCII.GetString(decryptedValue);
-                        bw.Write(write);
+                        string[] codes = dataToDec.Split(' ');
+                        string output = "";
+                        foreach (string s in codes)
+                        {
+                            try
+                            {
+                                int C = Convert.ToInt32(s);
+                                output += System.Convert.ToChar(System.Convert.ToInt32(KnapsackAlg.Decrypt(C), 2));
+                            }
+                            catch
+                            {
+                            }
+
+                        }
+                        bw.Write(output);
 
                         if (LoadedFilesController._END_OF_ENC_DEC_THREADS)
                         {

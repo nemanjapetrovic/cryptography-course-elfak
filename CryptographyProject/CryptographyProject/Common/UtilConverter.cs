@@ -31,5 +31,33 @@ namespace CryptographyProject.Common
 
             return asciiChars;
         }
+
+        public static string FromDeciamlToBinary(byte binary)
+        {
+            if (binary < 0)
+            {
+                Console.WriteLine("It requires a integer greater than 0.");
+                return null;
+            }
+
+            string binarystring = "";
+            byte factor = 128;
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (binary >= factor)
+                {
+                    binary -= factor;
+                    binarystring += "1";
+                }
+                else
+                {
+                    binarystring += "0";
+                }
+                factor /= 2;
+            }
+
+            return binarystring;
+        }
     }
 }
