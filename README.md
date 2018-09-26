@@ -21,5 +21,3 @@ The largest file I tried to encrypt was 1 GB and ran maximum 100 threads for enc
 ![Img2](http://i.imgur.com/Vt7z1Rz.jpg)
 
 ![Img3](http://i.imgur.com/NMD4XUI.jpg)
-
-[![N|Solid](http://www.blogworld.com/wp-content/uploads/2009/04/linkedin-logo.jpg)](https://rs.linkedin.com/in/nemanjapetrovic1994)
